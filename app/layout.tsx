@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
-import "./globals.css";
+import "@/app/globals.css";
 
 export const metadata: Metadata = {
-  title: "Handcrafted Haven",
+  title: {
+    template: "%s | Handcrafted Haven",
+    default: "Handcrafted Haven",
+  },
 };
 
 export default function RootLayout({

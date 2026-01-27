@@ -1,7 +1,7 @@
-import Header from "./ui/header";
-import SidebarNav from "./ui/sidebar-nav";
-import ReviewCard from "./ui/review-card";
-import Footer from "./ui/footer";
+import Header from "@/app/ui/header";
+import SidebarNav from "@/app/ui/sidebar-nav";
+import ReviewCard from "@/app/ui/review-card";
+import Footer from "@/app/ui/footer";
 
 export default function HomePage() {
   return (
