@@ -1,4 +1,3 @@
-import Link from "next/link";
 import Image from "next/image";
 
 export default function Header() {
@@ -20,27 +19,6 @@ export default function Header() {
           </div>
         </div>
 
-      </div>
-
-      {/* Mobile nav */}
-      <div className="md:hidden border-t">
-        <div className="mx-auto max-w-6xl px-4 py-3 flex flex-wrap gap-2">
-          <Link href="/browse" className="rounded-md border px-3 py-2 text-sm">
-            Browse
-          </Link>
-          <Link
-            href="/categories"
-            className="rounded-md border px-3 py-2 text-sm"
-          >
-            Categories
-          </Link>
-          <Link href="/sellers" className="rounded-md border px-3 py-2 text-sm">
-            Sellers
-          </Link>
-          <Link href="/cart" className="rounded-md border px-3 py-2 text-sm">
-            My Cart
-          </Link>
-        </div>
       </div>
     </header>
   );
