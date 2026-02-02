@@ -1,55 +1,71 @@
 const products = [
   {
-    id: '1',
     name: 'Bamboo Hoodie',
     price: 59.99,
-    categories: ['x'],
-    seller: 'GreenWear',
+    categoryName: 'Apparel',
+    sellerName: 'EarthStep',
+    description: 'GreenWear presents this hand-loomed bamboo fiber hoodie. Soft, breathable, and dyed with organic pigments to reflect our vision of sustainable style.'
   },
   {
-    id: '2',
     name: 'Eco Sneakers',
     price: 89.99,
-    categories: ['y'],
-    seller: 'EarthStep',
+    categoryName: 'Footwear',
+    sellerName: 'EarthStep',
+    description: 'Step naturally with EarthStep sneakers. Crafted from recycled canvas and raw rubber, these hand-stitched shoes embody our commitment to the planet.'
   },
   {
-    id: '3',
     name: 'Reusable Water Bottle',
     price: 24.99,
-    categories: ['z'],
-    seller: 'HydroLife',
+    categoryName: 'Accessories',
+    sellerName: 'EarthStep',
+    description: 'HydroLife’s hand-hammered copper bottle keeps drinks fresh. A functional masterpiece designed to eliminate plastic while honoring ancient craftsmanship.'
   },
 ];
 
 const categories = [
   {
-    id: 'x',
     name: 'Apparel',
   },
   {
-    id: 'y',
     name: 'Footwear',
   },
   {
-    id: 'z',
     name: 'Accessories',
   },
 ];
 
-const sellers = [
+const users = [
   {
-    id: 'a',
-    name: 'GreenWear',
+    email: 'admin@handcrafted.com',
+    name: 'Admin Handcrafted Heaven',
+    password: 'admin',
+    type: 'admin',
+    profile_image: '',
+    seller_username: 'admin',
+    seller_description: ''
   },
   {
-    id: 'b',
-    name: 'EarthStep',
+    email: 'yang.vanessa85@gmail.com',
+    name: 'Vanessa Sun Yang',
+    password: '123456',
+    type: 'seller',
+    profile_image: '',
+    seller_username: 'EarthStep',
+    seller_description: ''
+  },
+  {
+    email: 'jose.colmenares.gil@gmail.com',
+    name: 'Jose David Colmenarez Gil',
+    password: '123456',
+    type: 'seller',
+    profile_image: '',
+    seller_username: 'WoodenMad',
+    seller_description: ''
   },
 ];
 
 export {
   products,
   categories,
-  sellers
+  users
 };
