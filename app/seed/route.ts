@@ -49,25 +49,26 @@ export async function GET() {
     const catMap = Object.fromEntries(dbCats.rows.map(r => [r.category_name, r.category_id]));
     const userMap = Object.fromEntries(dbUsers.rows.map(r => [r.seller_username, r.user_id]));
 
-    // 4. Crear y Llenar Productos
-    await client.sql`
+    // 4. Create Products
+await client.sql`
       CREATE TABLE IF NOT EXISTS products (
         product_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
         product_name TEXT NOT NULL,
         product_price DECIMAL(10,2) NOT NULL,
         product_description TEXT,
+        product_image_url TEXT,
         category_id UUID REFERENCES categories(category_id),
         user_id UUID REFERENCES users(user_id)
       );
     `;
 
-    for (const prod of products) {
+for (const prod of products) {
       const categoryId = catMap[prod.categoryName];
       const userId = userMap[prod.sellerName];
 
       await client.sql`
-        INSERT INTO products (product_name, product_price, product_description, category_id, user_id)
-        VALUES (${prod.name}, ${prod.price}, ${prod.description}, ${categoryId}, ${userId})
+        INSERT INTO products (product_name, product_price, product_description, product_image_url, category_id, user_id)
+        VALUES (${prod.name}, ${prod.price}, ${prod.description}, ${prod.image}, ${categoryId}, ${userId})
         ON CONFLICT DO NOTHING;
       `;
     }

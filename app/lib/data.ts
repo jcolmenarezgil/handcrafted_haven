@@ -8,6 +8,7 @@ export async function fetchProducts() {
         p.product_name AS name,
         p.product_price AS price,
         p.product_description AS description,
+        p.product_image_url AS image_url,
         c.category_name AS category,
         u.user_name AS seller
       FROM products p
