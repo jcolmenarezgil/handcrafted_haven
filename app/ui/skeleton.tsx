@@ -14,7 +14,7 @@ export function ProductCardSkeleton() {
   return (
     <div className="rounded-lg border p-4 space-y-3">
       {/* Image */}
-      <Skeleton className="aspect-[4/3] w-full" />
+      <Skeleton className="aspect-4/3 w-full" />
 
       {/* Text */}
       <Skeleton className="h-4 w-3/4" />
