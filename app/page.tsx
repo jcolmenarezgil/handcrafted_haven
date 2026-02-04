@@ -24,7 +24,7 @@ export default function HomePage() {
               {products.map((p) => (
                 <Link
                   key={p.id}
-                  href={`/products/${p.id}`}
+                  href={`dashboard/product/${p.id}`}
                   className="rounded-lg border p-4 hover:bg-slate-50"
                 >
                   <div className="aspect-[4/3] w-full rounded-md border bg-white" />
