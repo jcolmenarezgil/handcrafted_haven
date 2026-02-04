@@ -1,14 +1,13 @@
 import Link from "next/link";
+import Image from "next/image";
 import Header from "@/app/ui/header";
 import SidebarNav from "@/app/ui/sidebar-nav";
 import Footer from "@/app/ui/footer";
+import { fetchProducts } from "@/app/lib/data";
 
-const products = [
-  { id: "1", name: "Product Name", price: 45, short: "Short intro..." },
-  { id: "2", name: "Another Product", price: 30, short: "Short intro..." },
-];
+export default async function HomePage() {
+  const products = await fetchProducts();
 
-export default function HomePage() {
   return (
     <main className="min-h-screen bg-white text-slate-900">
       <Header />
@@ -24,16 +23,38 @@ export default function HomePage() {
               {products.map((p) => (
                 <Link
                   key={p.id}
-                  href={`/products/${p.id}`}
-                  className="rounded-lg border p-4 hover:bg-slate-50"
+                  href={`/dashboard/product/${p.id}`}
+                  className="rounded-lg border p-4 hover:bg-slate-50 transition-colors shadow-sm"
                 >
-                  <div className="aspect-[4/3] w-full rounded-md border bg-white" />
+                  <div className="aspect-video w-full rounded-md border bg-slate-100 relative overflow-hidden">
+                    {p.image_url ? (
+                      <Image
+                        src={p.image_url}
+                        alt={p.name}
+                        fill
+                        className="object-contain"
+                        sizes="(max-width: 640px) 100vw, 50vw"
+                      />
+                    ) : (
+                      <div className="flex flex-col items-center justify-center h-full bg-slate-200">
+                        <span className="text-[10px] text-slate-500 font-bold uppercase">
+                          {p.category}
+                        </span>
+                        <p className="text-[8px] text-slate-400">No Image Available</p>
+                      </div>
+                    )}
+                  </div>
+
                   <div className="mt-3">
-                    <p className="font-semibold">{p.name}</p>
-                    <p className="text-sm text-slate-600">{p.short}</p>
-                    <p className="mt-2 text-sm">
-                      <span className="font-semibold">Price:</span> ${p.price}
-                    </p>
+                    <p className="font-semibold text-lg">{p.name}</p>
+                    <p className="text-sm text-slate-600 line-clamp-2">{p.description}</p>
+
+                    <div className="mt-4 flex items-center justify-between">
+                      <p className="text-blue-600 font-bold">${p.price}</p>
+                      <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                        By {p.seller}
+                      </p>
+                    </div>
                   </div>
                 </Link>
               ))}
