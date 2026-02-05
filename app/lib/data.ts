@@ -49,6 +49,14 @@ export async function fetchProductById(id: string) {
   }
 }
 
+export type Review = {
+  id: string;
+  name: string;
+  rating: number;
+  comment: string | null;
+  created_at: string;
+};
+
 export async function fetchReviewsByProductId(productId: string) {
   try {
     const data = await sql`

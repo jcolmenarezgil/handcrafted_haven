@@ -22,7 +22,7 @@ export default async function Page() {
               {products.map((p) => (
                 <Link
                 key={p.id}
-                href={`products/${p.id}`}
+                href={`/products/${p.id}`}
                 className="rounded-lg border p-4 hover:bg-slate-50 transition-colors shadow-sm"
               >
                 <div className="aspect-video w-full rounded-md border bg-slate-100 relative overflow-hidden">
