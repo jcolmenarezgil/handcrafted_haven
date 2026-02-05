@@ -48,3 +48,50 @@ export async function fetchProductById(id: string) {
     throw new Error("Failed to fetch product.");
   }
 }
+
+export type Review = {
+  id: string;
+  name: string;
+  rating: number;
+  comment: string | null;
+  created_at: string;
+};
+
+export async function fetchReviewsByProductId(productId: string) {
+  try {
+    const data = await sql`
+      SELECT 
+        review_id AS id,
+        reviewer_name AS name,
+        rating,
+        comment,
+        created_at
+      FROM reviews
+      WHERE product_id = ${productId}
+      ORDER BY created_at DESC
+    `;
+    return data.rows;
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch reviews.");
+  }
+}
+
+export async function createReview(input: {
+  productId: string;
+  name: string;
+  rating: number;
+  comment: string;
+}) {
+  const { productId, name, rating, comment } = input;
+
+  try {
+    await sql`
+      INSERT INTO reviews (product_id, reviewer_name, rating, comment)
+      VALUES (${productId}, ${name}, ${rating}, ${comment})
+    `;
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to create review.");
+  }
+}

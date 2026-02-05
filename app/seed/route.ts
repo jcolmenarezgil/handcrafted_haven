@@ -80,4 +80,16 @@ for (const prod of products) {
     await client.sql`ROLLBACK`;
     return NextResponse.json({ error: (error as Error).message }, { status: 500 });
   }
+
+  // 5. Create Reviews
+  await client.sql`
+    CREATE TABLE IF NOT EXISTS reviews (
+      review_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+      product_id UUID NOT NULL REFERENCES products(product_id) ON DELETE CASCADE,
+      reviewer_name TEXT NOT NULL,
+      rating INT NOT NULL CHECK (rating >= 1 AND rating <= 5),
+      comment TEXT,
+      created_at TIMESTAMPTZ DEFAULT NOW()
+    );
+  `;
 }
