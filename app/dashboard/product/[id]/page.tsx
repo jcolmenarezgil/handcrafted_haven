@@ -2,7 +2,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 
 import Header from "@/app/ui/header";
-import SidebarNav from "@/app/ui/sidebar-nav";
+import SideNav from "@/app/ui/sidenav";
 import ReviewCard from "@/app/ui/review-card";
 import Footer from "@/app/ui/footer";
 import { fetchProductById } from "@/app/lib/data";
@@ -20,7 +20,7 @@ export default async function ProductPage(props: {
 
       <div className="mx-auto max-w-6xl px-4 py-6">
         <div className="grid gap-6 lg:grid-cols-[240px_1fr_220px]">
-          <SidebarNav />
+          <SideNav />
 
           <section className="space-y-6">
             <div className="rounded-lg border p-5">
@@ -85,7 +85,7 @@ export default async function ProductPage(props: {
               <div className="mt-5 rounded-md border bg-slate-50 p-4 text-sm text-slate-700">
                 <p className="font-semibold">Leave a review</p>
                 <p className="text-slate-600">
-                  (We’ll add the review form next.)
+                  (We'll add the review form next.)
                 </p>
               </div>
             </div>
