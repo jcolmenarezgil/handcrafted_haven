@@ -65,17 +65,20 @@ export async function createUser(
   const hashedPassword = await bcrypt.hash(userData.password, 10);
 
   try {
-    await sql`
-      INSERT INTO users (name, email, password, usertype, seller_username, seller_description)
+          await sql`
+      INSERT INTO users (
+        user_name,
+        user_email,
+        user_password,
+        user_type
+      )
       VALUES (
         ${userData.name},
         ${userData.email},
         ${hashedPassword},
-        ${userData.usertype},
-        ${userData.seller_username ?? null},
-        ${userData.seller_description ?? null}
+        ${userData.usertype}
       )
-    `;
+      `;
 
     redirect('/users');
 
