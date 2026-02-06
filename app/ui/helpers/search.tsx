@@ -1,0 +1,40 @@
+'use client';
+
+
+import { useSearchParams, usePathname, useRouter } from 'next/navigation';
+import { useDebouncedCallback } from 'use-debounce';
+
+export default function Search({ placeholder }: { placeholder: string }) {
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const { replace } = useRouter();
+
+  const handleSearch = useDebouncedCallback((term) => {
+      console.log(`Searching... ${term}`);
+      const params = new URLSearchParams(searchParams);
+      params.set('page', '1');
+      if (term) {
+        params.set('query', term);
+      } else {
+        params.delete('query');
+      }
+      replace(`${pathname}?${params.toString()}`);
+  }, 300);
+
+
+  return (
+    <div className="relative flex flex-1 flex-shrink-0">
+      <label htmlFor="search" className="py-2 pl-10 pr-5">
+        Search
+      </label>
+      <input
+        className="peer block w-4/5 rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+        placeholder={placeholder}
+        onChange={(e) => {
+          handleSearch(e.target.value);
+        }}
+        defaultValue={searchParams.get('query')?.toString()}
+      />
+    </div>
+  );
+}
