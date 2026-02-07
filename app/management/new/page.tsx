@@ -2,6 +2,7 @@ import Link from "next/link";
 import { requireSeller } from "@/app/lib/auth";
 import { fetchCategories } from "@/app/lib/data";
 import { createProductAction } from "@/app/management/actions";
+import CategorySelect from "@/app/ui/category-select";
 
 export default async function NewProductPage() {
   await requireSeller(); // ✅ blocks non-sellers (or uses DEV override)
@@ -48,21 +49,7 @@ export default async function NewProductPage() {
 
         <div className="space-y-1">
           <label className="text-sm font-semibold">Category</label>
-          <select
-            name="category_id"
-            className="w-full rounded-md border px-3 py-2 text-sm"
-            required
-            defaultValue=""
-          >
-            <option value="" disabled>
-              Select a category
-            </option>
-            {categories.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
-            ))}
-          </select>
+          <CategorySelect categories={categories} />
         </div>
 
         <div className="space-y-1">

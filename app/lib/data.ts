@@ -296,16 +296,16 @@ export async function fetchCategories(): Promise<Category[]> {
   return data.rows as Category[];
 }
 
-export async function createCategory(name: string) {
-  const cleanName = name.trim();
+export async function createCategory(name: string): Promise<string> {
+  const clean = name.trim();
+  if (!clean) throw new Error("Category name is required");
 
-  if (!cleanName) {
-    throw new Error("Category name is required");
-  }
-
-  await sql`
+  const inserted = await sql`
     INSERT INTO categories (category_name)
-    VALUES (${cleanName})
-    ON CONFLICT (category_name) DO NOTHING
+    VALUES (${clean})
+    ON CONFLICT (category_name) DO UPDATE SET category_name = EXCLUDED.category_name
+    RETURNING category_id AS id
   `;
+
+  return inserted.rows[0].id as string;
 }
