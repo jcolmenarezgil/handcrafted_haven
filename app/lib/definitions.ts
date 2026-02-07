@@ -6,6 +6,7 @@ export type ProductInfo = {
     image_url: string;
     category: string;
     seller: string;
+    rating: number;
 };
 
 export type UserInfo = {
@@ -24,5 +25,5 @@ export type ArtisanCardInfo = {
     profile_image: string;
     business_name: string;
     description: string;
-    // rating: number;
+    rating: number;
 }

@@ -113,15 +113,19 @@ export async function fetchFilteredProducts(
         p.product_description AS description,
         p.product_image_url AS image_url,
         c.category_name AS category,
-        u.user_name AS seller
+        u.user_name AS seller,
+        COALESCE(AVG(r.rating), 0) AS rating
         FROM products p
         JOIN categories c ON p.category_id = c.category_id
         JOIN users u ON p.user_id = u.user_id
+        LEFT JOIN reviews r ON r.product_id = p.product_id
       WHERE
         p.product_name ILIKE ${`%${query}%`} OR
         u.user_name ILIKE ${`%${query}%`} OR
         c.category_name ILIKE ${`%${query}%`} OR
         p.product_description ILIKE ${`%${query}%`}
+      GROUP BY
+        p.product_id, c.category_name, u.user_name
       ORDER BY name ASC
       LIMIT ${ITEMS_PER_P_PAGE} OFFSET ${offset}
     `;
@@ -164,14 +168,20 @@ export async function fetchFilteredArtisans(
   try {
     const { rows } = await sql<ArtisanCardInfo>`
       SELECT
-        user_id AS id,
-        user_name AS name,
-        user_profile_image_url AS profile_image,
-        seller_username AS business_name
-      FROM users 
+        u.user_id AS id,
+        u.user_name AS name,
+        u.user_profile_image_url AS profile_image,
+        u.seller_username AS business_name,
+        u.seller_description AS description,
+        COALESCE(AVG(r.rating), 0) AS rating
+      FROM users u
+      LEFT JOIN products p ON p.user_id = u.user_id
+      LEFT JOIN reviews r ON r.product_id = p.product_id
       WHERE
-        user_name ILIKE ${`%${query}%`} OR
-        seller_username ILIKE ${`%${query}%`}
+        u.user_name ILIKE ${`%${query}%`} OR
+        u.seller_username ILIKE ${`%${query}%`}
+      GROUP BY
+        u.user_id
       ORDER BY name ASC
       LIMIT ${ITEMS_PER_A_PAGE} OFFSET ${offset}
     `;

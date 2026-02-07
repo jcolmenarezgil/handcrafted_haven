@@ -1,9 +1,8 @@
 import { fetchArtisansPages } from "@/app/lib/data";
 import Pagination from "@/app/ui/helpers/pagination";
 import Search from '@/app/ui/helpers/search';
-
 import { Metadata } from 'next';
-import ArtisansGrid from "../ui/artisans/grid";
+import ArtisansGrid from "@/app/ui/artisans/grid";
 
 export const metadata: Metadata = {
   title: 'Artisans',

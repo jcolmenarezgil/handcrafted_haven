@@ -37,6 +37,7 @@ export default async function ProductsGrid({
                       <p className="text-[8px] text-slate-400">No Image Available</p>
                     </div>
                   )}
+                  <p className="absolute bottom-0 right-0 p-1 rounded-md bg-green-300 text-[15px]">{Math.round(p.rating).toString()}/5</p>
                 </div>
 
                 <div className="mt-3">
