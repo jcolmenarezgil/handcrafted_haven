@@ -105,7 +105,16 @@ export type ProductInput = {
   category_id: string; 
 };
 
-export async function fetchProductsBySeller(userId: string) {
+export type SellerProduct = {
+  id: string;
+  name: string;
+  price: string; 
+  description: string | null;
+  image_url: string | null;
+  category: string;
+};
+
+export async function fetchProductsBySeller(userId: string): Promise<SellerProduct[]> {
   const data = await sql`
     SELECT 
       p.product_id AS id,
@@ -119,8 +128,9 @@ export async function fetchProductsBySeller(userId: string) {
     WHERE p.user_id = ${userId}
     ORDER BY p.product_name ASC
   `;
-  return data.rows;
+  return data.rows as SellerProduct[];
 }
+
 
 export async function createProduct(userId: string, input: ProductInput) {
   const { name, price, description, image_url, category_id } = input;
@@ -217,4 +227,29 @@ export async function fetchProductsPages(query: string) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch total number of invoices.');
   }
+}
+
+export type Category = { id: string; name: string };
+
+export async function fetchCategories(): Promise<Category[]> {
+  const data = await sql`
+    SELECT category_id AS id, category_name AS name
+    FROM categories
+    ORDER BY category_name ASC
+  `;
+  return data.rows as Category[];
+}
+
+export async function createCategory(name: string) {
+  const cleanName = name.trim();
+
+  if (!cleanName) {
+    throw new Error("Category name is required");
+  }
+
+  await sql`
+    INSERT INTO categories (category_name)
+    VALUES (${cleanName})
+    ON CONFLICT (category_name) DO NOTHING
+  `;
 }
