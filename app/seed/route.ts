@@ -71,9 +71,9 @@ for (const prod of products) {
         VALUES (${prod.name}, ${prod.price}, ${prod.description}, ${prod.image}, ${categoryId}, ${userId})
         ON CONFLICT DO NOTHING;
       `;
-    }
-
-// 5. Create Reviews
+}
+    
+      // 5. Create Reviews
   await client.sql`
     CREATE TABLE IF NOT EXISTS reviews (
       review_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
@@ -92,6 +92,4 @@ for (const prod of products) {
     await client.sql`ROLLBACK`;
     return NextResponse.json({ error: (error as Error).message }, { status: 500 });
   }
-
-
 }
