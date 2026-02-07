@@ -24,7 +24,7 @@ export default function RootLayout({
             <SideNav />
           </div>
           <div className="w-full">
-            <div className="grow p-6 md:overflow-y-auto md:p-10">{children}</div>
+            <div className="grow p-6 md:overflow-y-auto">{children}</div>
             <Footer />
           </div>
         </div>
