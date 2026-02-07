@@ -80,11 +80,12 @@ export async function createUser(
       )
       `;
 
-    redirect('/users');
-
-  } catch (error) {
-    return {
-      message: 'An error occurred while creating the user.',
-    };
+      
+    } catch (error) {
+      return {
+        message: 'An error occurred while creating the user.',
+      };
   }
+  // If the try it's working the redirect too.
+    redirect('/users');
 }
