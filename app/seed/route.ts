@@ -73,15 +73,7 @@ for (const prod of products) {
       `;
     }
 
-    await client.sql`COMMIT`;
-    return NextResponse.json({ message: "Handcrafted Haven: Base de datos poblada con éxito" });
-
-  } catch (error) {
-    await client.sql`ROLLBACK`;
-    return NextResponse.json({ error: (error as Error).message }, { status: 500 });
-  }
-
-  // 5. Create Reviews
+// 5. Create Reviews
   await client.sql`
     CREATE TABLE IF NOT EXISTS reviews (
       review_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
@@ -92,4 +84,14 @@ for (const prod of products) {
       created_at TIMESTAMPTZ DEFAULT NOW()
     );
   `;
+
+    await client.sql`COMMIT`;
+    return NextResponse.json({ message: "Handcrafted Haven: Base de datos poblada con éxito" });
+
+  } catch (error) {
+    await client.sql`ROLLBACK`;
+    return NextResponse.json({ error: (error as Error).message }, { status: 500 });
+  }
+
+
 }

@@ -1,5 +1,5 @@
 import { sql } from '@vercel/postgres';
-import { ProductInfo } from './definitions';
+import { ArtisanCardInfo, ProductInfo } from './definitions';
 
 export async function fetchProducts() {
   try {
@@ -97,12 +97,12 @@ export async function createReview(input: {
   }
 }
 
-const ITEMS_PER_PAGE = 3; // We don't have that many products yet
+const ITEMS_PER_P_PAGE = 3; // We don't have that many products yet
 export async function fetchFilteredProducts(
   query: string,
   currentPage: number,
 ) {
-  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+  const offset = (currentPage - 1) * ITEMS_PER_P_PAGE;
 
   try {
     const { rows } = await sql<ProductInfo>`
@@ -123,7 +123,7 @@ export async function fetchFilteredProducts(
         c.category_name ILIKE ${`%${query}%`} OR
         p.product_description ILIKE ${`%${query}%`}
       ORDER BY name ASC
-      LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
+      LIMIT ${ITEMS_PER_P_PAGE} OFFSET ${offset}
     `;
 
     return rows;
@@ -146,10 +146,56 @@ export async function fetchProductsPages(query: string) {
       product_description ILIKE ${`%${query}%`}
   `;
 
-    const totalPages = Math.ceil(Number(data.rows[0].count) / ITEMS_PER_PAGE);
+    const totalPages = Math.ceil(Number(data.rows[0].count) / ITEMS_PER_P_PAGE);
     return totalPages;
   } catch (error) {
     console.error('Database Error:', error);
-    throw new Error('Failed to fetch total number of invoices.');
+    throw new Error('Failed to fetch total number of artisans.');
+  }
+}
+
+const ITEMS_PER_A_PAGE = 5; // We don't have that many artisans yet
+export async function fetchFilteredArtisans(
+  query: string,
+  currentPage: number,
+) {
+  const offset = (currentPage - 1) * ITEMS_PER_A_PAGE;
+
+  try {
+    const { rows } = await sql<ArtisanCardInfo>`
+      SELECT
+        user_id AS id,
+        user_name AS name,
+        user_profile_image_url AS profile_image,
+        seller_username AS business_name
+      FROM users 
+      WHERE
+        user_name ILIKE ${`%${query}%`} OR
+        seller_username ILIKE ${`%${query}%`}
+      ORDER BY name ASC
+      LIMIT ${ITEMS_PER_A_PAGE} OFFSET ${offset}
+    `;
+
+    return rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch artisans.');
+  }
+}
+
+export async function fetchArtisansPages(query: string) {
+  try {
+    const data = await sql`SELECT COUNT(*)
+    FROM users
+    WHERE
+      user_name ILIKE ${`%${query}%`} OR
+      seller_username ILIKE ${`%${query}%`}
+  `;
+
+    const totalPages = Math.ceil(Number(data.rows[0].count) / ITEMS_PER_A_PAGE);
+    return totalPages;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch total number of artisans.');
   }
 }

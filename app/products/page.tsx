@@ -22,13 +22,15 @@ export default async function Page(props: {
 
   return (
     <main className="bg-white text-slate-900 w-full">
-        <h1 className="text-3xl md:text-2xl font-bold text-center pb-8">Products</h1>
+      <div className="pb-2">
+        <h1 className="text-3xl md:text-2xl font-bold text-center">Products</h1>
+      </div>
 
-      <div className="flex items-center justify-between gap-2 mb-8">
+      <div className="flex items-center justify-between gap-2 m-4">
         <Search placeholder="Search product..." />
       </div>
 
-      <div className="mx-auto max-w-6xl">
+      <div className="mx-auto max-w-6xl p-4">
         <ProductsGrid query={query} currentPage={currentPage} />
       </div>
       <div className="mt-5 flex w-full justify-center">

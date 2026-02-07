@@ -13,12 +13,12 @@ export default async function ProductsGrid({
 
   return (
     <div className="space-y-4">
-        <div className="grid gap-6 grid-cols-[repeat(auto-fit,minmax(250px,1fr))]">
+        <div className="grid gap-6 grid-cols-[repeat(auto-fit,minmax(250px,1fr))] place-items-center">
               {products?.map((p) => (
                 <Link
                 key={p.id}
                 href={`/products/${p.id}`}
-                className="rounded-lg border p-4 hover:bg-slate-50 transition-colors shadow-sm"
+                className="rounded-lg border p-4 hover:bg-slate-50 transition-colors shadow-sm max-w-[300px]"
               >
                 <div className="aspect-video w-full rounded-md border bg-slate-100 relative overflow-hidden">
                   {p.image_url ? (
@@ -40,7 +40,7 @@ export default async function ProductsGrid({
                 </div>
 
                 <div className="mt-3">
-                  <p className="font-semibold text-lg">{p.name}</p>
+                  <p className="font-semibold text-lg line-clamp-1">{p.name}</p>
                   <p className="text-sm text-slate-600 line-clamp-2">{p.description}</p>
 
                   <div className="mt-4 flex items-center justify-between">
