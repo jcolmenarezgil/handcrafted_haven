@@ -40,6 +40,7 @@ export default async function ManagementPage() {
                     className="
                       inline-flex
                       h-9
+                      bg-gray-700
                       items-center
                       justify-center
                       rounded-md

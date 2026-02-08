@@ -4,7 +4,7 @@
 
 // export async function requireSeller() {
 //   const cookieStore = await cookies();
-//   const userId = cookieStore.get("user_id")?.value; // <- change name once we know cookie name
+//   const userId = cookieStore.get("user_id")?.value; 
 
 //   if (!userId) redirect("/login");
 
@@ -40,4 +40,16 @@ export async function requireSeller() {
   if (!seller) redirect("/seed"); // or redirect("/login")
 
   return { userId: seller.user_id as string };
+}
+
+export async function getCurrentUser() {
+  // DEV MODE: pretend the "current user" is the first seller
+  const { rows } = await sql`
+    SELECT user_id AS id, user_name AS name, user_type AS type
+    FROM users
+    WHERE user_type = 'seller'
+    LIMIT 1
+  `;
+
+  return rows[0] ?? null; // { id, name, type } or null
 }

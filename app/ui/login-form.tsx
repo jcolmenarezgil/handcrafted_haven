@@ -8,8 +8,6 @@ import {
 } from '@heroicons/react/24/outline';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 
-import { useActionState } from 'react';
-
 import { useSearchParams } from 'next/navigation';
 import { Button } from './button';
  
@@ -18,7 +16,7 @@ export default function LoginForm() {
   const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
 
   return (
-    <form action="/api/login" className="space-y-3">
+    <form action="/api/login" method="post" className="space-y-3">
       <div className="flex-1 rounded-lg bg-gray-50 px-6 pb-4 pt-8">
         <h1 className={`mb-3 text-2xl`}>
           Please log in to continue.
