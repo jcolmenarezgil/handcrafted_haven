@@ -42,7 +42,6 @@ export default async function ManagementPage() {
 
                   <button
                     className="rounded-md border px-3 py-1 text-sm hover:bg-slate-50"
-                    // delete action later
                     disabled
                   >
                     Delete

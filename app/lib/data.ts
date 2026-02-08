@@ -309,3 +309,20 @@ export async function createCategory(name: string): Promise<string> {
 
   return inserted.rows[0].id as string;
 }
+
+export async function fetchProductByIdForSeller(userId: string, productId: string) {
+  const data = await sql`
+    SELECT
+      p.product_id AS id,
+      p.product_name AS name,
+      p.product_price AS price,
+      p.product_description AS description,
+      p.product_image_url AS image_url,
+      p.category_id AS category_id
+    FROM products p
+    WHERE p.product_id = ${productId} AND p.user_id = ${userId}
+    LIMIT 1
+  `;
+  return data.rows[0] ?? null;
+}
+
