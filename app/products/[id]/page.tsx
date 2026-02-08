@@ -2,13 +2,12 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { revalidatePath } from "next/cache";
 
-import ReviewForm from "@/app/ui/review-form";
+import ReviewForm from "@/app/ui/products/review-form";
 import {
   fetchProductById,
   fetchReviewsByProductId,
   createReview,
 } from "@/app/lib/data";
-
 
 export default async function ProductPage(props: {
   params: { id: string } | Promise<{ id: string }>;

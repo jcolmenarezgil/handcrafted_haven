@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { requireSeller } from "@/app/lib/auth";
 import { fetchProductsBySeller, SellerProduct } from "@/app/lib/data";
+import ConfirmDeleteButton from "@/app/ui/management/confirm-delete-button";
+import { deleteProductAction } from "@/app/lib/actions/management_actions";
 
 export default async function ManagementPage() {
   const { userId } = await requireSeller(); // blocks non-sellers
@@ -32,20 +34,30 @@ export default async function ManagementPage() {
                   <p className="text-sm text-slate-600">${p.price}</p>
                 </div>
 
-                <div className="flex gap-2">
+                <div className="flex gap-6">
                   <Link
                     href={`/management/${p.id}/edit`}
-                    className="rounded-md border px-3 py-1 text-sm hover:bg-slate-50"
+                    className="
+                      inline-flex
+                      h-9
+                      items-center
+                      justify-center
+                      rounded-md
+                      border
+                      px-4
+                      text-sm
+                      font-semibold
+                      text-white
+                      hover:bg-slate-700
+                    "
                   >
                     Edit
                   </Link>
 
-                  <button
-                    className="rounded-md border px-3 py-1 text-sm hover:bg-slate-50"
-                    disabled
-                  >
-                    Delete
-                  </button>
+                  <form action={deleteProductAction}>
+                    <input type="hidden" name="productId" value={p.id} />
+                    <ConfirmDeleteButton />
+                  </form>
                 </div>
               </li>
             ))}

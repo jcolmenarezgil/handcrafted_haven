@@ -2,7 +2,7 @@ import Link from "next/link";
 import { requireSeller } from "@/app/lib/auth";
 import { fetchCategories } from "@/app/lib/data";
 import { createProductAction } from "@/app/lib/actions/management_actions";
-import CategorySelect from "@/app/ui/category-select";
+import CategorySelect from "@/app/ui/management/category-select";
 
 export default async function NewProductPage() {
   await requireSeller();

@@ -5,7 +5,7 @@ import {
   updateProductAction,
   deleteProductAction,
 } from "@/app/lib/actions/management_actions";
-import CategorySelect from "@/app/ui/category-select";
+import CategorySelect from "@/app/ui/management/category-select";
 
 export default async function EditProductPage(props: {
   params: { id: string } | Promise<{ id: string }>;
