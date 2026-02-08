@@ -1,55 +1,121 @@
-// import { cookies } from "next/headers";
-// import { sql } from "@vercel/postgres";
-// import { redirect } from "next/navigation";
-
-// export async function requireSeller() {
-//   const cookieStore = await cookies();
-//   const userId = cookieStore.get("user_id")?.value; 
-
-//   if (!userId) redirect("/login");
-
-//   const { rows } = await sql`
-//     SELECT user_id, user_type
-//     FROM users
-//     WHERE user_id = ${userId}
-//     LIMIT 1
-//   `;
-
-//   const user = rows[0];
-//   if (!user) redirect("/login");
-
-//   if (user.user_type !== "seller") redirect("/products");
-
-//   return { userId: user.user_id as string };
-// }
-
-// app/lib/auth.ts
 import { sql } from "@vercel/postgres";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import crypto from "crypto";
 
-export async function requireSeller() {
-  // TEMP: pick the first seller in the DB
-  const { rows } = await sql`
-    SELECT user_id
-    FROM users
-    WHERE user_type = 'seller'
-    LIMIT 1
-  `;
+const SESSION_COOKIE = "hh_session";
+const SESSION_DAYS = 14;
 
-  const seller = rows[0];
-  if (!seller) redirect("/seed"); // or redirect("/login")
-
-  return { userId: seller.user_id as string };
+function mustGetAuthSecret() {
+  const secret = process.env.AUTH_SECRET;
+  if (!secret) throw new Error("Missing AUTH_SECRET env var");
+  return secret;
 }
 
-export async function getCurrentUser() {
-  // DEV MODE: pretend the "current user" is the first seller
+function sha256(input: string) {
+  return crypto.createHash("sha256").update(input).digest("hex");
+}
+
+function newToken() {
+  return crypto.randomBytes(32).toString("hex");
+}
+
+function expiresAtDate(days = SESSION_DAYS) {
+  const d = new Date();
+  d.setDate(d.getDate() + days);
+  return d;
+}
+
+export type CurrentUser = {
+  id: string;
+  name: string;
+  type: "seller" | "buyer";
+  email: string;
+};
+
+export async function createSession(userId: string) {
+  const token = newToken();
+  const secret = mustGetAuthSecret();
+
+  // Hash what we store in DB (token + secret)
+  const tokenHash = sha256(token + secret);
+
+  const sessionId = crypto.randomUUID();
+  const expiresAt = expiresAtDate();
+
+  await sql`
+    INSERT INTO sessions (session_id, user_id, session_token_hash, expires_at)
+    VALUES (${sessionId}, ${userId}, ${tokenHash}, ${expiresAt.toISOString()})
+  `;
+
+  // Store raw token in cookie (httpOnly), never store secret/hash client-side
+  const cookieStore = await cookies();
+  cookieStore.set(SESSION_COOKIE, token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+    expires: expiresAt,
+  });
+
+  return sessionId;
+}
+
+export async function destroySession() {
+  const cookieStore = await cookies();
+  const token = cookieStore.get(SESSION_COOKIE)?.value;
+  cookieStore.delete(SESSION_COOKIE);
+
+  if (!token) return;
+
+  const secret = mustGetAuthSecret();
+  const tokenHash = sha256(token + secret);
+
+  await sql`DELETE FROM sessions WHERE session_token_hash = ${tokenHash}`;
+}
+
+export async function getCurrentUser(): Promise<CurrentUser | null> {
+  const cookieStore = await cookies();
+  const token = cookieStore.get(SESSION_COOKIE)?.value;
+  if (!token) return null;
+
+  const secret = mustGetAuthSecret();
+  const tokenHash = sha256(token + secret);
+
+  // join session -> user, ensure not expired
   const { rows } = await sql`
-    SELECT user_id AS id, user_name AS name, user_type AS type
-    FROM users
-    WHERE user_type = 'seller'
+    SELECT
+      u.user_id AS id,
+      u.user_name AS name,
+      u.user_type AS type,
+      u.email AS email,
+      s.expires_at AS expires_at
+    FROM sessions s
+    JOIN users u ON u.user_id = s.user_id
+    WHERE s.session_token_hash = ${tokenHash}
+      AND s.expires_at > NOW()
     LIMIT 1
   `;
 
-  return rows[0] ?? null; // { id, name, type } or null
+  const user = rows[0];
+  if (!user) return null;
+
+  return {
+    id: user.id,
+    name: user.name,
+    type: user.type,
+    email: user.email,
+  };
+}
+
+export async function requireAuth() {
+  const user = await getCurrentUser();
+  if (!user) redirect("/login");
+  return user;
+}
+
+export async function requireSeller() {
+  const user = await requireAuth();
+  if (user.type !== "seller") redirect("/products");
+  return { userId: user.id };
 }

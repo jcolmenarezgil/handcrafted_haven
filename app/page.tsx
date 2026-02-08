@@ -1,8 +1,7 @@
 import Link from "next/link";
-import { requireSeller } from "@/app/lib/auth";
+
 
 export default async function HomePage() {
-  await requireSeller();
 
   return (
     <main className="bg-white text-slate-900">
