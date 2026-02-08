@@ -1,29 +1,22 @@
-import Image from "next/image";
 import Link from "next/link";
+import { getCurrentUser } from "@/app/lib/auth";
+import { logoutAction } from "@/app/lib/actions/auth_actions";
 
-export default function Header() {
+export default async function Header() {
+  const user = await getCurrentUser();
+
   return (
     <header className="border-b">
-      <div className="mx-auto flex items-center justify-between px-4 py-4">
-        <div className="flex items-center gap-3">
-          <div className="relative h-10 w-10 overflow-hidden rounded-full border bg-slate-50">
-            <Image src="/logo.svg" alt="Handcrafted Haven logo" fill />
-          </div>
+      <div className="mx-auto max-w-6xl flex items-center justify-between px-4 py-3">
+        <Link href="/" className="font-bold text-lg">
+          Handcrafted Haven
+        </Link>
 
-          <div>
-            <p className="text-lg font-semibold leading-tight">
-              Handcrafted Haven
-            </p>
-            <p className="text-sm text-slate-600 leading-tight">
-              Unique Handmade Treasures
-            </p>
-          </div>
-        </div>
-
-        <div>
-          <Link
-            href="/login"
-            className="
+        <nav className="flex items-center gap-3">
+          {!user ? (
+            <Link
+              href="/login"
+              className="
                         inline-flex
                         h-9
                         bg-black
@@ -38,9 +31,19 @@ export default function Header() {
                         hover:bg-slate-700
                       "
             >
-              <p className="text-white">Login</p>
+              Login
             </Link>
-        </div>
+          ) : (
+            <form action={logoutAction}>
+              <button
+                type="submit"
+                className="rounded-md border px-3 py-2 text-sm font-medium"
+              >
+                Logout
+              </button>
+            </form>
+          )}
+        </nav>
       </div>
     </header>
   );
