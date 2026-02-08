@@ -5,7 +5,7 @@ import { createProductAction } from "@/app/management/actions";
 import CategorySelect from "@/app/ui/category-select";
 
 export default async function NewProductPage() {
-  await requireSeller(); // ✅ blocks non-sellers (or uses DEV override)
+  await requireSeller();
   const categories = await fetchCategories();
 
   return (
@@ -69,6 +69,7 @@ export default async function NewProductPage() {
             className="w-full rounded-md border px-3 py-2 text-sm"
             rows={4}
             placeholder="What makes it special?"
+            required
           />
         </div>
 
