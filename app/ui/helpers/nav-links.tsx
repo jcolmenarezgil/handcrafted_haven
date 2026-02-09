@@ -16,7 +16,7 @@ export default function NavLinks({ isSeller = false }: NavLinksProps) {
     { name: "Products", href: "/products" },
     { name: "Artisans", href: "/artisans" },
 
-    ...(isSeller ? [{ name: "Management", href: "/management" }] : []),
+    ...(isSeller ? [{ name: "My Products", href: "/management" }] : []),
   ];
 
   return (
