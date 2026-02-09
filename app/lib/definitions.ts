@@ -9,7 +9,7 @@ export type ProductInfo = {
     rating: number;
 };
 
-export type UserInfo = {
+export type User = {
     id: string;
     email: string;
     name: string;
