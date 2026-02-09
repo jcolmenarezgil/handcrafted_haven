@@ -1,8 +1,11 @@
 import Image from "next/image";
 import Link from 'next/link';
+import { auth, signOut } from '@/auth';
+import { logout } from '../lib/actions/auth-actions';
+export default async function Header() {
+  
+  const session = await auth();
 
-
-export default function Header() {
   return (
     <header className="border-b">
       <div className="mx-auto flex items-center justify-between px-4 py-4">
@@ -21,11 +24,21 @@ export default function Header() {
               </p>
             </div>   
         </div>
+       {session ? (
+              <form action={logout}>
+      <button className="rounded-md bg-red-500 px-4 py-1 text-white hover:bg-red-600">
+        Logout
+      </button>
+      </form>
 
-        <div className="h-10 w-10 bg-black rounded-md text-center">
-          <p className="text-white">Log</p>
-        </div>
-
+        ) : (
+          <Link
+            href="/login"
+            className="rounded-md bg-black px-4 py-1 text-white"
+          >
+            Sign in
+          </Link>
+        )}
       </div>
     </header>
   );

@@ -1,149 +1,149 @@
 'use client';
 import { createUser } from '@/app/lib/actions/user_actions';
 import { useActionState } from 'react';
-
 import { AtSymbolIcon, KeyIcon } from '@heroicons/react/24/outline';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { useSearchParams } from 'next/navigation';
 import { Button } from './button';
+import { useState } from 'react';
 
 export default function CreateuserForm() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
+
   const [state, formAction] = useActionState(createUser, {
-  message: null,
-  errors: {},
-});
+    message: null,
+    errors: {},
+  });
+
+  const [userType, setUserType] = useState('');
 
   return (
-    <form action={formAction} className="space-y-4">
-      <div className="flex-1 rounded-lg bg-gray-50 px-6 pb-4 pt-8">
-        <h1 className="mb-6 text-2xl">Please create a new user.</h1>
+    <form action={formAction} className="max-w-xl mx-auto space-y-4">
+      <div className="rounded-2xl bg-white shadow-lg border border-gray-100 px-8 pb-6 pt-8">
+
+        <h1 className="mb-6 text-3xl font-semibold text-gray-800 text-center">
+          Create your account 
+        </h1>
 
         {/* Name */}
         <div>
-          <label
-            className="mb-2 block text-xs font-medium text-gray-900"
-            htmlFor="name"
-          >
+          <label className="mb-2 block text-sm font-medium text-gray-700">
             Name
           </label>
           <div className="relative">
             <input
-              className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
-              id="name"
+              className="w-full rounded-lg border border-gray-200 py-2 pl-10 text-sm focus:ring-2 focus:ring-black"
               type="text"
               name="name"
               placeholder="Enter your name"
               required
             />
-            <AtSymbolIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+            <AtSymbolIcon className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
           </div>
         </div>
 
         {/* Email */}
         <div>
-          <label
-            className="mb-2 block text-xs font-medium text-gray-900"
-            htmlFor="email"
-          >
+          <label className="mb-2 block text-sm font-medium text-gray-700">
             Email
           </label>
           <div className="relative">
             <input
-              className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
-              id="email"
+              className="w-full rounded-lg border border-gray-200 py-2 pl-10 text-sm focus:ring-2 focus:ring-black"
               type="email"
               name="email"
               placeholder="Enter your email"
               required
-              minLength={6}
             />
-            <KeyIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+            <KeyIcon className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
           </div>
         </div>
 
         {/* Password */}
         <div>
-          <label
-            className="mb-2 block text-xs font-medium text-gray-900"
-            htmlFor="password"
-          >
+          <label className="mb-2 block text-sm font-medium text-gray-700">
             Password
           </label>
           <div className="relative">
             <input
-              className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
-              id="password"
+              className="w-full rounded-lg border border-gray-200 py-2 pl-10 text-sm focus:ring-2 focus:ring-black"
               type="password"
               name="password"
               placeholder="Enter your password"
               required
-              minLength={6}
             />
-            <KeyIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+            <KeyIcon className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
           </div>
         </div>
 
-        {/* User type */}
+        {/* User Type */}
         <div>
-          <label
-            className="mb-2 block text-xs font-medium text-gray-900"
-            htmlFor="user-type"
-          >
-            <strong>User type</strong>
+          <label className="mb-2 block text-sm font-semibold text-gray-800">
+            User type
           </label>
-          <div className="flex space-x-4">
-            <label className="flex items-center space-x-1">
-              <input type="radio" name="usertype" value="basic" required />
-              <span>Basic</span>
+
+          <div className="flex gap-6">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                name="usertype"
+                value="basic"
+                required
+                onChange={(e) => setUserType(e.target.value)}
+              />
+              Basic User
             </label>
-            <label className="flex items-center space-x-1">
-              <input type="radio" name="usertype" value="seller" />
-              <span>Seller</span>
+
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                name="usertype"
+                value="seller"
+                onChange={(e) => setUserType(e.target.value)}
+              />
+              Seller
             </label>
           </div>
         </div>
 
-        {/* Seller username */}
-        <div>
-          <label
-            className="mb-2 block text-xs font-medium text-gray-900"
-            htmlFor="seller_username"
-          >
+        {/* Seller Fields */}
+        <div className={`space-y-3 p-4 rounded-lg border ${
+          userType === 'seller'
+            ? 'border-green-200 bg-green-50'
+            : 'border-gray-200 bg-gray-50 opacity-60'
+        }`}>
+
+          <label className="text-sm font-medium text-gray-700">
             Seller username
           </label>
           <input
-            className="block w-full rounded-md border border-gray-200 py-2 px-3 text-sm outline-2 placeholder:text-gray-500"
-            id="seller_username"
+            className="w-full rounded-lg border border-gray-200 py-2 px-3 text-sm"
             type="text"
             name="seller_username"
+            disabled={userType !== 'seller'}
             placeholder="Enter your seller username"
           />
-        </div>
 
-        {/* Seller description */}
-        <div>
-          <label
-            className="mb-2 block text-xs font-medium text-gray-900"
-            htmlFor="seller_description"
-          >
+          <label className="text-sm font-medium text-gray-700">
             Seller description
           </label>
           <input
-            className="block w-full rounded-md border border-gray-200 py-2 px-3 text-sm outline-2 placeholder:text-gray-500"
-            id="seller_description"
+            className="w-full rounded-lg border border-gray-200 py-2 px-3 text-sm"
             type="text"
             name="seller_description"
-            placeholder="Enter your seller description"
+            disabled={userType !== 'seller'}
+            placeholder="Tell us about your shop"
           />
         </div>
 
         <input type="hidden" name="redirectTo" value={callbackUrl} />
 
-        <Button className="mt-4 w-full">
-          Create User <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
+        <Button className="mt-6 w-full rounded-lg bg-black hover:bg-gray-800">
+          Create User
+          <ArrowRightIcon className="ml-2 h-5 w-5 text-white" />
         </Button>
+
       </div>
     </form>
   );

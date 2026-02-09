@@ -7,3 +7,10 @@ export type ProductInfo = {
     category: string;
     seller: string;
 };
+
+export type User = {
+    id: string;
+    name: string;
+    email: string;
+    password: string;
+};

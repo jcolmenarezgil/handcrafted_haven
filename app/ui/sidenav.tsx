@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import NavLinks from '@/app/ui/nav-links';
-// import { signOut } from '@/auth';
+import { signOut } from '@/auth';
 
 export default function SideNav() {
     return (
@@ -21,6 +21,7 @@ export default function SideNav() {
         </Link>
         <div className="flex grow flex-row justify-start space-x-2 md:flex-col md:space-x-0 md:space-y-2">
           <NavLinks />
+        
         </div>
       </div>
     );
