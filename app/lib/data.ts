@@ -325,4 +325,3 @@ export async function fetchProductByIdForSeller(userId: string, productId: strin
   `;
   return data.rows[0] ?? null;
 }
-

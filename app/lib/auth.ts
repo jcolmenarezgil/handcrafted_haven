@@ -26,18 +26,18 @@ function expiresAtDate(days = SESSION_DAYS) {
   return d;
 }
 
+export type UserRole = "buyer" | "seller" | "admin";
+
 export type CurrentUser = {
   id: string;
   name: string;
-  type: "seller" | "buyer";
+  type: UserRole;
   email: string;
 };
 
 export async function createSession(userId: string) {
   const token = newToken();
   const secret = mustGetAuthSecret();
-
-  // Hash what we store in DB (token + secret)
   const tokenHash = sha256(token + secret);
 
   const sessionId = crypto.randomUUID();
@@ -48,7 +48,6 @@ export async function createSession(userId: string) {
     VALUES (${sessionId}, ${userId}, ${tokenHash}, ${expiresAt.toISOString()})
   `;
 
-  // Store raw token in cookie (httpOnly), never store secret/hash client-side
   const cookieStore = await cookies();
   cookieStore.set(SESSION_COOKIE, token, {
     httpOnly: true,
@@ -82,14 +81,12 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
   const secret = mustGetAuthSecret();
   const tokenHash = sha256(token + secret);
 
-  // join session -> user, ensure not expired
   const { rows } = await sql`
     SELECT
       u.user_id AS id,
       u.user_name AS name,
       u.user_type AS type,
-      u.email AS email,
-      s.expires_at AS expires_at
+      u.user_email AS email
     FROM sessions s
     JOIN users u ON u.user_id = s.user_id
     WHERE s.session_token_hash = ${tokenHash}
@@ -114,8 +111,8 @@ export async function requireAuth() {
   return user;
 }
 
-export async function requireSeller() {
+export async function requireManager() {
   const user = await requireAuth();
-  if (user.type !== "seller") redirect("/products");
-  return { userId: user.id };
+  if (user.type !== "seller" && user.type !== "admin") redirect("/products");
+  return { userId: user.id, role: user.type };
 }

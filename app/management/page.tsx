@@ -1,11 +1,11 @@
 import Link from "next/link";
-import { requireSeller } from "@/app/lib/auth";
+import { requireManager } from "@/app/lib/auth";
 import { fetchProductsBySeller, SellerProduct } from "@/app/lib/data";
 import ConfirmDeleteButton from "@/app/ui/management/confirm-delete-button";
 import { deleteProductAction } from "@/app/lib/actions/management_actions";
 
 export default async function ManagementPage() {
-  const { userId } = await requireSeller(); // blocks non-sellers
+  const { userId } = await requireManager(); // blocks non-sellers
 
   const products = await fetchProductsBySeller(userId);
 

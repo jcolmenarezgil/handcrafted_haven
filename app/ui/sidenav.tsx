@@ -4,7 +4,7 @@ import { getCurrentUser } from "@/app/lib/auth";
 
 export default async function SideNav() {
   const user = await getCurrentUser();
-  const isSeller = user?.type === "seller"; // <-- FIX (and null-safe)
+  const isSeller = user?.type === "seller"; 
 
   return (
     <div className="flex h-full flex-col px-3 py-4 md:px-2">
