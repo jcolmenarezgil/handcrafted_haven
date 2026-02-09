@@ -5,11 +5,20 @@ import { fetchFilteredProducts } from "@/app/lib/data";
 export default async function ProductsGrid({
   query,
   currentPage,
+  category,
+  minPrice,
+  maxPrice,
+  orderBy,
 }: {
   query: string;
   currentPage: number;
+  category: string;
+  minPrice: Number;
+  maxPrice: Number;
+  orderBy: string;
 }) {
-  const products = await fetchFilteredProducts(query, currentPage);
+
+  const products = await fetchFilteredProducts(query, currentPage, category, minPrice.toString(), maxPrice.toString(), orderBy);
 
   return (
     <div className="space-y-4">
