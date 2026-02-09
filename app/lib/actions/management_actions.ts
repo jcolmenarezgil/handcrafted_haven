@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 
-import { requireSeller } from "@/app/lib/auth";
+import { requireManager } from "@/app/lib/auth";
 import {
   createProduct,
   createCategory,
@@ -16,7 +16,7 @@ const DEFAULT_IMAGE =
   "https://pv9c8slz3a7mqr1m.public.blob.vercel-storage.com/products/Gemini_Generated_Image_ryk4txryk4txryk4-v0nBeKGwWtFZ63sMeMBy75YSWQwCPe.png";
 
 export async function createProductAction(formData: FormData) {
-  const { userId } = await requireSeller();
+  const { userId } = await requireManager();
 
   const name = String(formData.get("name") || "").trim();
   const description = String(formData.get("description") || "").trim();
@@ -56,7 +56,7 @@ export async function createProductAction(formData: FormData) {
 }
 
 export async function updateProductAction(formData: FormData) {
-  const { userId } = await requireSeller();
+  const { userId } = await requireManager();
 
   const productId = String(formData.get("productId") || "").trim();
   if (!productId) throw new Error("Missing productId");
@@ -100,7 +100,7 @@ export async function updateProductAction(formData: FormData) {
 }
 
 export async function deleteProductAction(formData: FormData) {
-  const { userId } = await requireSeller();
+  const { userId } = await requireManager();
 
   const productId = String(formData.get("productId") || "").trim();
   if (!productId) throw new Error("Missing productId");

@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import crypto from "crypto";
 
-const SESSION_COOKIE = "hh_session";
+const SESSION_COOKIE = "this_session";
 const SESSION_DAYS = 14;
 
 function mustGetAuthSecret() {
