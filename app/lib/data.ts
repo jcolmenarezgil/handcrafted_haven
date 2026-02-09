@@ -172,14 +172,18 @@ export async function deleteProduct(userId: string, productId: string) {
   return result.rows.length === 1;
 }
 
-const ITEMS_PER_P_PAGE = 3; // We don't have that many products yet
+const ITEMS_PER_P_PAGE = 5; // We don't have that many products yet
 export async function fetchFilteredProducts(
   query: string,
   currentPage: number,
+  category: string,
+  minPrice: string,
+  maxPrice: string,
+  orderBy: string,
 ) {
   const offset = (currentPage - 1) * ITEMS_PER_P_PAGE;
 
-  try {
+  try {    
     const { rows } = await sql<ProductInfo>`
       SELECT
         p.product_id AS id,
@@ -195,13 +199,21 @@ export async function fetchFilteredProducts(
         JOIN users u ON p.user_id = u.user_id
         LEFT JOIN reviews r ON r.product_id = p.product_id
       WHERE
-        p.product_name ILIKE ${`%${query}%`} OR
-        u.user_name ILIKE ${`%${query}%`} OR
+        (p.product_name ILIKE ${`%${query}%`} OR
         c.category_name ILIKE ${`%${query}%`} OR
-        p.product_description ILIKE ${`%${query}%`}
+        p.product_description ILIKE ${`%${query}%`})
+      AND 
+      (${category} = '' OR p.category_id::text = ${category})
+      AND
+        (${minPrice} = 0 OR p.product_price >= ${minPrice})
+      AND
+        (${maxPrice} = 99999 OR p.product_price <= ${maxPrice})
       GROUP BY
-        p.product_id, c.category_name, u.user_name
-      ORDER BY name ASC
+        p.product_id, p.product_name, c.category_name, u.user_name, p.product_price, p.product_image_url, p.product_description
+      ORDER BY 
+        CASE WHEN ${orderBy} = 'price_asc' THEN p.product_price END ASC,
+        CASE WHEN ${orderBy} = 'price_desc' THEN p.product_price END DESC,
+        name ASC
       LIMIT ${ITEMS_PER_P_PAGE} OFFSET ${offset}
     `;
 
@@ -212,17 +224,26 @@ export async function fetchFilteredProducts(
   }
 }
 
-export async function fetchProductsPages(query: string) {
+export async function fetchProductsPages(
+  query: string,
+  category: string,
+  minPrice: string,
+  maxPrice: string,) {
   try {
     const data = await sql`SELECT COUNT(*)
     FROM products p
     JOIN categories c ON p.category_id = c.category_id
     JOIN users u ON p.user_id = u.user_id
     WHERE
-      product_name ILIKE ${`%${query}%`} OR
-      user_name ILIKE ${`%${query}%`} OR
+      (product_name ILIKE ${`%${query}%`} OR
       category_name ILIKE ${`%${query}%`} OR
-      product_description ILIKE ${`%${query}%`}
+      product_description ILIKE ${`%${query}%`})
+      AND
+      (${category} = '' OR p.category_id::text = ${category})
+      AND
+      (${minPrice} = 0 OR p.product_price >= ${minPrice})
+      AND
+      (${maxPrice} = 99999 OR p.product_price <= ${maxPrice})
   `;
 
     const totalPages = Math.ceil(Number(data.rows[0].count) / ITEMS_PER_P_PAGE);
