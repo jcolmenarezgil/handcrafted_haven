@@ -1,11 +1,11 @@
 import Link from "next/link";
-import { requireSeller } from "@/app/lib/auth";
+import { requireManager } from "@/app/lib/auth";
 import { fetchCategories } from "@/app/lib/data";
 import { createProductAction } from "@/app/lib/actions/management_actions";
 import CategorySelect from "@/app/ui/management/category-select";
 
 export default async function NewProductPage() {
-  await requireSeller();
+  await requireManager();
   const categories = await fetchCategories();
 
   return (

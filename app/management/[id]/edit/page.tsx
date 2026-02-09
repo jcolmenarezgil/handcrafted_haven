@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { requireSeller } from "@/app/lib/auth";
+import { requireManager} from "@/app/lib/auth";
 import { fetchProductByIdForSeller, fetchCategories } from "@/app/lib/data";
 import {
   updateProductAction,
@@ -13,7 +13,7 @@ export default async function EditProductPage(props: {
   const params = await props.params;
   const productId = params.id;
 
-  const { userId } = await requireSeller();
+  const { userId } = await requireManager();
 
   const product = await fetchProductByIdForSeller(userId, productId);
   if (!product) return notFound();
