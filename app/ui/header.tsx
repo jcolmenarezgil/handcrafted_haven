@@ -1,31 +1,49 @@
-import Image from "next/image";
-import Link from 'next/link';
+import Link from "next/link";
+import { getCurrentUser } from "@/app/lib/auth";
+import { logoutAction } from "@/app/lib/actions/auth_actions";
 
+export default async function Header() {
+  const user = await getCurrentUser();
 
-export default function Header() {
   return (
     <header className="border-b">
-      <div className="mx-auto flex items-center justify-between px-4 py-4">
+      <div className="mx-auto max-w-6xl flex items-center justify-between px-4 py-3">
+        <Link href="/" className="font-bold text-lg">
+          Handcrafted Haven
+        </Link>
 
-        <div className="flex items-center gap-3">
-            <div className="relative h-10 w-10 overflow-hidden rounded-full border bg-slate-50">
-              <Image src="/logo.svg" alt="Handcrafted Haven logo" fill />
-            </div>
-
-            <div>
-              <p className="text-lg font-semibold leading-tight">
-                Handcrafted Haven
-              </p>
-              <p className="text-sm text-slate-600 leading-tight">
-                Unique Handmade Treasures
-              </p>
-            </div>   
-        </div>
-
-        <div className="h-10 w-10 bg-black rounded-md text-center">
-          <p className="text-white">Log</p>
-        </div>
-
+        <nav className="flex items-center gap-3">
+          {!user ? (
+            <Link
+              href="/login"
+              className="
+                        inline-flex
+                        h-9
+                        bg-black
+                        items-center
+                        justify-center
+                        rounded-md
+                        border
+                        px-4
+                        text-sm
+                        font-semibold
+                        text-white
+                        hover:bg-slate-700
+                      "
+            >
+              Login
+            </Link>
+          ) : (
+            <form action={logoutAction}>
+              <button
+                type="submit"
+                className="rounded-md border px-3 py-2 text-sm font-medium"
+              >
+                Logout
+              </button>
+            </form>
+          )}
+        </nav>
       </div>
     </header>
   );

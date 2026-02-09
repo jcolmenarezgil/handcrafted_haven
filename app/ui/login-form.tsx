@@ -7,22 +7,18 @@ import {
   
 } from '@heroicons/react/24/outline';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
-
-import { useActionState } from 'react';
-
+import {loginAction} from "@/app/lib/actions/auth_actions";
 import { useSearchParams } from 'next/navigation';
 import { Button } from './button';
  
 export default function LoginForm() {
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
+  const callbackUrl = searchParams.get('callbackUrl') || '/';
 
   return (
-    <form action="/api/login" className="space-y-3">
+    <form action={loginAction} className="space-y-3">
       <div className="flex-1 rounded-lg bg-gray-50 px-6 pb-4 pt-8">
-        <h1 className={`mb-3 text-2xl`}>
-          Please log in to continue.
-        </h1>
+        <h1 className={`mb-3 text-2xl`}>Please log in to continue.</h1>
         <div className="w-full">
           <div>
             <label
@@ -65,18 +61,14 @@ export default function LoginForm() {
           </div>
         </div>
         <input type="hidden" name="redirectTo" value={callbackUrl} />
-        <Button
-          className="mt-4 w-full"
-        >
+        <Button className="mb-3 mt-8 w-full bg-green-800 text-white hover:bg-green-900 " type="submit">
           Log in <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
         </Button>
         <div
           className="flex h-8 items-end space-x-1"
           aria-live="polite"
           aria-atomic="true"
-        >
-      
-        </div>
+        ></div>
       </div>
     </form>
   );
