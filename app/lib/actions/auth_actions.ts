@@ -12,20 +12,43 @@ export async function loginAction(formData: FormData) {
   if (!email || !password) redirect("/login?error=missing");
 
   const { rows } = await sql`
-    SELECT user_id, user_password
+    SELECT user_id, user_password, user_type
     FROM users
-    WHERE user_email = ${email}
+    WHERE LOWER(TRIM(user_email)) = ${email}
     LIMIT 1
   `;
 
-  const row = rows[0];
-  if (!row) redirect("/login?error=invalid");
+  const user = rows[0];
+  if (!user) redirect("/login?error=invalid");
 
-  // If user_password is bcrypt-hashed:
-  const ok = await bcrypt.compare(password, row.user_password);
+  const stored = String(user.user_password || "");
+  let ok = false;
+
+  // bcrypt users
+  if (stored.startsWith("$2")) {
+    ok = await bcrypt.compare(password, stored);
+  } else {
+    ok = password === stored;
+  }
+
   if (!ok) redirect("/login?error=invalid");
 
-  await createSession(row.user_id);
+  // upgrade plaintext -> bcrypt after successful login
+  if (!stored.startsWith("$2")) {
+    const hashed = await bcrypt.hash(password, 10);
+    await sql`
+      UPDATE users
+      SET user_password = ${hashed}
+      WHERE user_id = ${user.user_id}
+    `;
+  }
+
+  await createSession(String(user.user_id));
+
+  if (user.user_type === "seller" || user.user_type === "admin") {
+    redirect("/management");
+  }
+
   redirect("/");
 }
 

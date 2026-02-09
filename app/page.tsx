@@ -36,13 +36,6 @@ export default async function HomePage() {
             <span>Artisans</span>
           </Link>
 
-          <Link
-            href="/management"
-            className="flex items-center justify-center rounded-lg bg-black px-6 py-3 text-sm font-medium text-white md:text-base"
-          >
-            <span>Manage Your Wares</span>
-          </Link>
-
         </div>
       </div>
 
