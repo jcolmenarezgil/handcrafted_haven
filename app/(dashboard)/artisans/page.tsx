@@ -3,6 +3,8 @@ import Pagination from "@/app/ui/helpers/pagination";
 import Search from '@/app/ui/helpers/search';
 import { Metadata } from 'next';
 import ArtisansGrid from "@/app/ui/artisans/grid";
+import { Suspense } from 'react';
+import { ArtisansGridSkeleton } from '@/app/ui/skeleton';
 
 export const metadata: Metadata = {
   title: 'Artisans',
@@ -20,18 +22,30 @@ export default async function Page(props: {
   const totalPages = await fetchArtisansPages(query);
 
   return (
-    <main className="bg-white text-slate-900 w-full">
-      <div className="pb-2">
-        <h1 className="text-3xl md:text-2xl font-bold text-center">Artisans</h1>
+    <main className="w-full">
+      <div className="mb-6 px-4">
+        <h2 className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#6b4f3f]">
+          Community
+        </h2>
+        <h1 className="text-3xl font-serif text-[#2e2e2e] mt-1 italic">
+          Master Artisans
+        </h1>
       </div>
 
       <div className="flex items-center justify-between gap-2 m-4">
         <Search placeholder="Search artisan..." />
       </div>
 
-      <div className="mx-auto max-w-6xl p-4">
-        <ArtisansGrid query={query} currentPage={currentPage} />
+      <div className="mt-8 px-4">
+        <Suspense
+          key={query + currentPage}
+          fallback={<ArtisansGridSkeleton />}
+        >
+          <ArtisansGrid query={query} currentPage={currentPage} />
+        </Suspense>
       </div>
+
+
       <div className="mt-5 flex w-full justify-center">
         <Pagination totalPages={totalPages} />
       </div>

@@ -48,7 +48,7 @@ export default async function ProductPage(props: {
             <h1 className="text-2xl font-bold text-center">{product.name}</h1>
 
             <div className="mt-5 rounded-lg border bg-slate-50 p-4">
-              <div className="mb-3 aspect-[4/3] w-full rounded-md border bg-white relative overflow-hidden">
+              <div className="mb-3 aspect-4/3 w-full rounded-md border bg-white relative overflow-hidden">
                 {product.image_url ? (
                   <Image
                     src={product.image_url}
