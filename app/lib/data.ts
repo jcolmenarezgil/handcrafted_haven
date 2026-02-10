@@ -177,7 +177,6 @@ export async function deleteProduct(userId: string, productId: string) {
   return result.rows.length === 1;
 }
 
-const ITEMS_PER_P_PAGE = 5; // We don't have that many products yet
 export async function fetchFilteredProducts(
   query: string,
   currentPage: number,
@@ -185,8 +184,9 @@ export async function fetchFilteredProducts(
   minPrice: string,
   maxPrice: string,
   orderBy: string,
+  itemsPerPage: number,
 ) {
-  const offset = (currentPage - 1) * ITEMS_PER_P_PAGE;
+  const offset = (currentPage - 1) * itemsPerPage;
 
   try {    
     const { rows } = await sql<ProductInfo>`
@@ -219,7 +219,7 @@ export async function fetchFilteredProducts(
         CASE WHEN ${orderBy} = 'price_asc' THEN p.product_price END ASC,
         CASE WHEN ${orderBy} = 'price_desc' THEN p.product_price END DESC,
         name ASC
-      LIMIT ${ITEMS_PER_P_PAGE} OFFSET ${offset}
+      LIMIT ${itemsPerPage} OFFSET ${offset}
     `;
 
     return rows;
@@ -233,7 +233,9 @@ export async function fetchProductsPages(
   query: string,
   category: string,
   minPrice: string,
-  maxPrice: string,) {
+  maxPrice: string,
+  itemsPerPage: number,
+) {
   try {
     const data = await sql`SELECT COUNT(*)
     FROM products p
@@ -251,7 +253,7 @@ export async function fetchProductsPages(
       (${maxPrice} = 99999 OR p.product_price <= ${maxPrice})
   `;
 
-    const totalPages = Math.ceil(Number(data.rows[0].count) / ITEMS_PER_P_PAGE);
+    const totalPages = Math.ceil(Number(data.rows[0].count) / itemsPerPage);
     return totalPages;
   } catch (error) {
     console.error('Database Error:', error);
@@ -259,12 +261,12 @@ export async function fetchProductsPages(
   }
 }
 
-const ITEMS_PER_A_PAGE = 5; // We don't have that many artisans yet
 export async function fetchFilteredArtisans(
   query: string,
   currentPage: number,
+  itemsPerPage: number,
 ) {
-  const offset = (currentPage - 1) * ITEMS_PER_A_PAGE;
+  const offset = (currentPage - 1) * itemsPerPage;
 
   try {
     const { rows } = await sql<ArtisanCardInfo>`
@@ -284,7 +286,7 @@ export async function fetchFilteredArtisans(
       GROUP BY
         u.user_id
       ORDER BY name ASC
-      LIMIT ${ITEMS_PER_A_PAGE} OFFSET ${offset}
+      LIMIT ${itemsPerPage} OFFSET ${offset}
     `;
 
     return rows;
@@ -294,7 +296,10 @@ export async function fetchFilteredArtisans(
   }
 }
 
-export async function fetchArtisansPages(query: string) {
+export async function fetchArtisansPages(
+  query: string, 
+  itemsPerPage: number,
+) {
   try {
     const data = await sql`SELECT COUNT(*)
     FROM users
@@ -303,7 +308,7 @@ export async function fetchArtisansPages(query: string) {
       seller_username ILIKE ${`%${query}%`}
   `;
 
-    const totalPages = Math.ceil(Number(data.rows[0].count) / ITEMS_PER_A_PAGE);
+    const totalPages = Math.ceil(Number(data.rows[0].count) / itemsPerPage);
     return totalPages;
   } catch (error) {
     console.error('Database Error:', error);
