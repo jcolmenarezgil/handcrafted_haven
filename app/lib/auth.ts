@@ -26,7 +26,7 @@ function expiresAtDate(days = SESSION_DAYS) {
   return d;
 }
 
-export type UserRole = "buyer" | "seller" | "admin";
+export type UserRole = "basic" | "seller" | "admin";
 
 export type CurrentUser = {
   id: string;
