@@ -23,14 +23,14 @@ const products = [
     description: 'HydroLife’s hand-hammered copper bottle keeps drinks fresh. A functional masterpiece designed to eliminate plastic while honoring ancient craftsmanship.',
     image: '';
   }, */
-/*   {
+   {
     "name": "Hand-Carved Formula 1 Car",
     "price": 19.99,
     "categoryName": "Home Decor & Collectibles",
     "sellerName": "WoodenMad",
     "description": "A unique, hand-carved Formula 1 car model made from solid mahogany wood. It features the iconic dark blue and yellow livery of the famous Venezuelan youth and teenage beverage, Malta from Empresas Polar (R), capturing a nostalgic piece of design history.",
     "image": "https://pv9c8slz3a7mqr1m.public.blob.vercel-storage.com/products/Gemini_Generated_Image_9ti8pc9ti8pc9ti8-HjG5XqdZjAyf0J9IdBtXcCifK98IAL.png",
-  }, */
+  }, 
 ];
 
 const categories = [
@@ -94,7 +94,7 @@ const users = [
     seller_username: 'Joelnin',
     seller_description: ''   
   }, */
-/*     {
+     {
     email: 'jose.colmenares.gil@gmail.com',
     name: 'Jose David Colmenarez Gil',
     password: '123456',
@@ -102,7 +102,7 @@ const users = [
     profile_image: '',
     seller_username: 'WoodenMad',
     seller_description: ''   
-  }, */
+  }, 
 ];
 
 export {
