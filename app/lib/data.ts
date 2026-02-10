@@ -35,6 +35,7 @@ export async function fetchProductById(id: string) {
         p.product_description AS description,
         p.product_image_url AS image_url,
         c.category_name AS category,
+        c.category_id AS category_id,
         u.user_name AS seller
       FROM products p
       JOIN categories c ON p.category_id = c.category_id
@@ -112,6 +113,7 @@ export type SellerProduct = {
   description: string | null;
   image_url: string | null;
   category: string;
+  rating?: number;
 };
 
 export async function fetchProductsBySeller(userId: string): Promise<SellerProduct[]> {
@@ -122,15 +124,18 @@ export async function fetchProductsBySeller(userId: string): Promise<SellerProdu
       p.product_price AS price,
       p.product_description AS description,
       p.product_image_url AS image_url,
-      c.category_name AS category
+      c.category_name AS category,
+      COALESCE(AVG(r.rating), 0) AS rating -- Si no hay reviews, devolvemos 0
     FROM products p
     JOIN categories c ON p.category_id = c.category_id
+    LEFT JOIN reviews r ON p.product_id = r.product_id -- Unimos con las reseñas
     WHERE p.user_id = ${userId}
+    GROUP BY p.product_id, c.category_name -- Agrupamos para calcular el promedio
     ORDER BY p.product_name ASC
   `;
+  
   return data.rows as SellerProduct[];
 }
-
 
 export async function createProduct(userId: string, input: ProductInput) {
   const { name, price, description, image_url, category_id } = input;

@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import Link from 'next/link';
 import { generatePagination } from '@/app/lib/utils';
 import { usePathname, useSearchParams } from 'next/navigation';
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 
 export default function Pagination({ totalPages }: { totalPages: number }) {
   const pathname = usePathname();
@@ -19,43 +20,32 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
   const allPages = generatePagination(currentPage, totalPages);
 
   return (
-    <>
+    <div className="inline-flex items-center space-x-2">
+      <PaginationArrow
+        direction="left"
+        href={createPageURL(currentPage - 1)}
+        isDisabled={currentPage <= 1}
+      />
 
-      <div className="inline-flex">
-        <PaginationArrow
-          direction="left"
-          href={createPageURL(currentPage - 1)}
-          isDisabled={currentPage <= 1}
-        />
-
-        <div className="flex -space-x-px">
-          {allPages.map((page, index) => {
-            let position: 'first' | 'last' | 'single' | 'middle' | undefined;
-
-            if (index === 0) position = 'first';
-            if (index === allPages.length - 1) position = 'last';
-            if (allPages.length === 1) position = 'single';
-            if (page === '...') position = 'middle';
-
-            return (
-              <PaginationNumber
-                key={`${page}-${index}`}
-                href={createPageURL(page)}
-                page={page}
-                position={position}
-                isActive={currentPage === page}
-              />
-            );
-          })}
-        </div>
-
-        <PaginationArrow
-          direction="right"
-          href={createPageURL(currentPage + 1)}
-          isDisabled={currentPage >= totalPages}
-        />
+      <div className="flex items-center gap-1">
+        {allPages.map((page, index) => {
+          return (
+            <PaginationNumber
+              key={`${page}-${index}`}
+              href={createPageURL(page)}
+              page={page}
+              isActive={currentPage === page}
+            />
+          );
+        })}
       </div>
-    </>
+
+      <PaginationArrow
+        direction="right"
+        href={createPageURL(currentPage + 1)}
+        isDisabled={currentPage >= totalPages}
+      />
+    </div>
   );
 }
 
@@ -63,25 +53,23 @@ function PaginationNumber({
   page,
   href,
   isActive,
-  position,
 }: {
   page: number | string;
   href: string;
-  position?: 'first' | 'last' | 'middle' | 'single';
   isActive: boolean;
 }) {
+  const isMiddle = page === '...';
+
   const className = clsx(
-    'flex h-10 w-10 items-center justify-center text-sm border',
+    'flex h-9 w-9 items-center justify-center text-sm font-medium transition-all duration-200 rounded-full border',
     {
-      'rounded-l-md': position === 'first' || position === 'single',
-      'rounded-r-md': position === 'last' || position === 'single',
-      'z-10 bg-black border-blue-600 text-white': isActive,
-      'hover:bg-gray-100': !isActive && position !== 'middle',
-      'text-gray-300': position === 'middle',
+      'bg-[#2e2e2e] border-[#2e2e2e] text-white shadow-md scale-110 z-10': isActive,
+      'bg-white border-slate-200 text-slate-600 hover:border-[#c97c5d] hover:text-[#c97c5d]': !isActive && !isMiddle,
+      'border-transparent text-slate-300 cursor-default': isMiddle,
     },
   );
 
-  return isActive || position === 'middle' ? (
+  return isActive || isMiddle ? (
     <div className={className}>{page}</div>
   ) : (
     <Link href={href} className={className}>
@@ -100,27 +88,22 @@ function PaginationArrow({
   isDisabled?: boolean;
 }) {
   const className = clsx(
-    'flex h-10 w-10 items-center justify-center rounded-md border',
+    'flex h-9 w-9 items-center justify-center rounded-full border transition-all duration-200',
     {
-      'pointer-events-none text-gray-300': isDisabled,
-      'hover:bg-gray-100': !isDisabled,
-      'mr-2 md:mr-4': direction === 'left',
-      'ml-2 md:ml-4': direction === 'right',
+      'pointer-events-none border-slate-100 text-slate-200': isDisabled,
+      'bg-white border-slate-200 text-slate-600 hover:border-[#c97c5d] hover:text-[#c97c5d] hover:shadow-sm': !isDisabled,
     },
   );
 
-  const icon =
-    direction === 'left' ? (
-      <p className="w-4">◀</p>
-    ) : (
-        <p className="w-4">▶</p>
-    );
+  const Icon = direction === 'left' ? ChevronLeftIcon : ChevronRightIcon;
 
   return isDisabled ? (
-    <div className={className}>{icon}</div>
+    <div className={className}>
+      <Icon className="w-4 h-4" />
+    </div>
   ) : (
     <Link className={className} href={href}>
-      {icon}
+      <Icon className="w-4 h-4" />
     </Link>
   );
 }

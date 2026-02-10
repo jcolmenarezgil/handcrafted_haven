@@ -1,9 +1,10 @@
 'use client';
 
 import { Category } from "@/app/lib/data";
+import { ChevronDownIcon } from "@heroicons/react/16/solid";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 
-export default function CategoryDropdown( { categories }: { categories: Category[] }) {
+export default function CategoryDropdown({ categories }: { categories: Category[] }) {
 
   const searchParams = useSearchParams();
   const { replace } = useRouter();
@@ -26,23 +27,29 @@ export default function CategoryDropdown( { categories }: { categories: Category
   }
 
   return (
-    <div className="md:w-[200px] place-items-center text-center m-2 mb-4 md:mb-2">
-      <label htmlFor="category" className="p-2">Category</label>
-      <select
-        className="border p-2 rounded-md w-full bg-white"
-        id="category"
-        value={current}
-        onChange={(e) => changeCategory(e.target.value)}
-      >
-        <option value="">All</option>
+    <div className="flex flex-col gap-1.5 min-w-45">
+      <label htmlFor="category" className="text-[10px] uppercase tracking-[0.15em] font-bold text-[#6b4f3f] px-1">
+        Category</label>
+      <div className="relative">
+        <select
+          className="appearance-none w-full bg-white border border-slate-200 text-slate-700 py-2.5 px-4 pr-10 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#c97c5d] focus:border-transparent cursor-pointer transition-all"
+          id="category"
+          value={current}
+          onChange={(e) => changeCategory(e.target.value)}
+        >
+          <option value="">All</option>
 
-        {categories.map((o) => (
-          <option key={o.id} value={o.id}>
-            {o.name}
-          </option>
-        ))}
-      </select>
+          {categories.map((o) => (
+            <option key={o.id} value={o.id}>
+              {o.name}
+            </option>
+          ))}
+        </select>
+        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
+          <ChevronDownIcon className="w-4 h-4" />
+        </div>
+      </div>
     </div>
-    
+
   );
 }
