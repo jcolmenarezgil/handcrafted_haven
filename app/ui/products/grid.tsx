@@ -10,6 +10,7 @@ export default async function ProductsGrid({
   minPrice,
   maxPrice,
   orderBy,
+  itemsPerPage,
 }: {
   query: string;
   currentPage: number;
@@ -17,6 +18,7 @@ export default async function ProductsGrid({
   minPrice: number;
   maxPrice: number;
   orderBy: string;
+  itemsPerPage: number;
 }) {
   const products = await fetchFilteredProducts(
     query,
@@ -24,7 +26,8 @@ export default async function ProductsGrid({
     category,
     minPrice.toString(),
     maxPrice.toString(),
-    orderBy
+    orderBy,
+    itemsPerPage,
   );
 
   if (!products || products.length === 0) {
@@ -38,7 +41,7 @@ export default async function ProductsGrid({
 
         <p className="text-slate-500 text-sm mt-3 text-center max-w-sm leading-relaxed">
           We couldn&apos;t find anything matching <span className="font-bold text-[#6b4f3f]">&quot;{query || 'your filters'}&quot;</span>.
-          The artisan might be crafting it as we speak!
+          The artisans might be crafting it as we speak!
         </p>
 
         <Link
