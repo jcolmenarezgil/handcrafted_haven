@@ -1,11 +1,11 @@
-// app/ui/products/filter-bar.tsx
 'use client';
+
 
 import Search from '@/app/ui/helpers/search';
 import OrderBy from '@/app/ui/products/order-by';
 import CategoryDropdown from '@/app/ui/products/category-filter';
 import PriceRangeFilter from '@/app/ui/products/price-range';
-import { Category } from '@/app/lib/data';
+import { Category } from '@/app/lib/definitions';
 
 export default function ProductFilterBar({ categories }: { categories: Category[] }) {
     return (
