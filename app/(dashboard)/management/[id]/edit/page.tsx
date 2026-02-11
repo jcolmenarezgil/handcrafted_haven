@@ -3,10 +3,18 @@ import Link from "next/link";
 import Image from "next/image";
 import { requireManager } from "@/app/lib/auth";
 import { fetchProductByIdForSeller, fetchCategories } from "@/app/lib/data";
-import { updateProductAction, deleteProductAction } from "@/app/lib/actions/management_actions";
+import {
+  updateProductAction,
+  deleteProductAction,
+} from "@/app/lib/actions/management_actions";
 import CategorySelect from "@/app/ui/management/category-select";
 import ConfirmDeleteButton from "@/app/ui/management/confirm-delete-button";
-import { ChevronRightIcon, ArrowLeftIcon, PencilSquareIcon, PhotoIcon } from "@heroicons/react/24/outline";
+import {
+  ChevronRightIcon,
+  ArrowLeftIcon,
+  PencilSquareIcon,
+  PhotoIcon,
+} from "@heroicons/react/24/outline";
 
 export default async function EditProductPage(props: {
   params: Promise<{ id: string }>;
@@ -21,20 +29,28 @@ export default async function EditProductPage(props: {
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-10">
-
       <nav className="mb-8 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">
-        <Link href="/management" className="hover:text-[#c97c5d] transition-colors">
+        <Link
+          href="/management"
+          className="hover:text-[#c97c5d] transition-colors"
+        >
           Workshop
         </Link>
-        <ChevronRightIcon className="w-3 h-3" />
+
+        <ChevronRightIcon className="w-3 h-3" aria-hidden="true" />
         <span className="text-slate-300">Edit</span>
-        <ChevronRightIcon className="w-3 h-3" />
-        <span className="text-[#6b4f3f] truncate max-w-37.5">{product.name}</span>
+        <ChevronRightIcon className="w-3 h-3" aria-hidden="true" />
+
+        <span className="text-[#6b4f3f] truncate max-w-37.5">
+          {product.name}
+        </span>
       </nav>
 
       <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-          <h1 className="font-serif italic text-4xl text-[#2e2e2e]">Refine your Work</h1>
+          <h1 className="font-serif italic text-4xl text-[#2e2e2e]">
+            Refine your Work
+          </h1>
           <p className="mt-2 text-slate-500 text-sm italic">
             &quot;Every detail is a signature of your craftsmanship.&quot;
           </p>
@@ -43,20 +59,31 @@ export default async function EditProductPage(props: {
         <div className="flex items-center gap-4 bg-[#faf7f2] p-3 rounded-2xl border border-[#c97c5d]/10">
           <div className="relative h-12 w-12 overflow-hidden rounded-lg bg-white border border-slate-100">
             {product.image_url ? (
-              <Image src={product.image_url} alt={product.name} fill className="object-cover" sizes="48px" />
+              <Image
+                src={product.image_url}
+                alt={
+                  product.name ? `Photo of ${product.name}` : "Product photo"
+                }
+                fill
+                className="object-cover"
+                sizes="48px"
+              />
             ) : (
-              <PhotoIcon className="p-2 text-slate-200" />
+              <PhotoIcon className="p-2 text-slate-200" aria-hidden="true" />
             )}
           </div>
           <div className="pr-2">
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Current Piece</p>
-            <p className="text-sm font-serif text-[#2e2e2e] truncate max-w-30">{product.name}</p>
+            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">
+              Current Piece
+            </p>
+            <p className="text-sm font-serif text-[#2e2e2e] truncate max-w-30">
+              {product.name}
+            </p>
           </div>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-
         <div className="lg:col-span-2">
           <form
             action={updateProductAction}
@@ -66,8 +93,14 @@ export default async function EditProductPage(props: {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <label className="text-[11px] font-bold uppercase tracking-wider text-[#6b4f3f]">Name</label>
+                <label
+                  htmlFor="editProductName"
+                  className="text-[11px] font-bold uppercase tracking-wider text-[#6b4f3f]"
+                >
+                  Name
+                </label>
                 <input
+                  id="editProductName"
                   name="name"
                   defaultValue={product.name}
                   className="w-full rounded-xl border-slate-200 px-4 py-3 text-sm focus:ring-2 focus:ring-[#c97c5d]/20 focus:border-[#c97c5d] transition-all outline-none"
@@ -77,8 +110,14 @@ export default async function EditProductPage(props: {
               </div>
 
               <div className="space-y-2">
-                <label className="text-[11px] font-bold uppercase tracking-wider text-[#6b4f3f]">Price (USD)</label>
+                <label
+                  htmlFor="editProductPrice"
+                  className="text-[11px] font-bold uppercase tracking-wider text-[#6b4f3f]"
+                >
+                  Price (USD)
+                </label>
                 <input
+                  id="editProductPrice"
                   name="price"
                   type="number"
                   step="0.01"
@@ -91,13 +130,28 @@ export default async function EditProductPage(props: {
             </div>
 
             <div className="space-y-2">
-              <label className="text-[11px] font-bold uppercase tracking-wider text-[#6b4f3f]">Category</label>
-              <CategorySelect categories={categories} defaultValue={product.category_id} />
+              <label
+                htmlFor="editProductCategory"
+                className="text-[11px] font-bold uppercase tracking-wider text-[#6b4f3f]"
+              >
+                Category
+              </label>
+              <CategorySelect
+                id="editProductCategory"
+                categories={categories}
+                defaultValue={product.category_id}
+              />
             </div>
 
             <div className="space-y-2">
-              <label className="text-[11px] font-bold uppercase tracking-wider text-[#6b4f3f]">Image URL</label>
+              <label
+                htmlFor="editProductImageUrl"
+                className="text-[11px] font-bold uppercase tracking-wider text-[#6b4f3f]"
+              >
+                Image URL
+              </label>
               <input
+                id="editProductImageUrl"
                 name="image_url"
                 defaultValue={product.image_url || ""}
                 className="w-full rounded-xl border-slate-200 px-4 py-3 text-sm focus:ring-2 focus:ring-[#c97c5d]/20 focus:border-[#c97c5d] transition-all outline-none font-mono text-[12px]"
@@ -106,8 +160,14 @@ export default async function EditProductPage(props: {
             </div>
 
             <div className="space-y-2">
-              <label className="text-[11px] font-bold uppercase tracking-wider text-[#6b4f3f]">Description</label>
+              <label
+                htmlFor="editProductDescription"
+                className="text-[11px] font-bold uppercase tracking-wider text-[#6b4f3f]"
+              >
+                Description
+              </label>
               <textarea
+                id="editProductDescription"
                 name="description"
                 defaultValue={product.description || ""}
                 className="w-full rounded-xl border-slate-200 px-4 py-3 text-sm focus:ring-2 focus:ring-[#c97c5d]/20 focus:border-[#c97c5d] transition-all outline-none resize-none"
@@ -118,15 +178,22 @@ export default async function EditProductPage(props: {
             </div>
 
             <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-slate-50">
-              <Link href="/management" className="text-sm font-semibold text-slate-400 hover:text-slate-600 flex items-center gap-2">
-                <ArrowLeftIcon className="w-4 h-4" />
+              <Link
+                href="/management"
+                className="text-sm font-semibold text-slate-400 hover:text-slate-600 flex items-center gap-2"
+              >
+                <ArrowLeftIcon className="w-4 h-4" aria-hidden="true" />
                 Cancel
               </Link>
+
               <button
                 type="submit"
                 className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-full bg-[#2e2e2e] px-10 py-4 text-sm font-bold text-white hover:bg-black transition-all shadow-md active:scale-95"
               >
-                <PencilSquareIcon className="w-4 h-4 text-[#c97c5d]" />
+                <PencilSquareIcon
+                  className="w-4 h-4 text-[#c97c5d]"
+                  aria-hidden="true"
+                />
                 Save Changes
               </button>
             </div>
@@ -135,9 +202,12 @@ export default async function EditProductPage(props: {
 
         <div className="lg:col-span-1">
           <div className="bg-red-50/50 p-6 rounded-3xl border border-red-100 flex flex-col items-center text-center">
-            <h3 className="text-red-900 font-bold text-xs uppercase tracking-[0.2em] mb-4">Archive Section</h3>
+            <h3 className="text-red-900 font-bold text-xs uppercase tracking-[0.2em] mb-4">
+              Archive Section
+            </h3>
             <p className="text-red-700/60 text-xs mb-6 leading-relaxed">
-              Once a masterpiece is removed from the workshop, all history and reviews will be lost forever.
+              Once a masterpiece is removed from the workshop, all history and
+              reviews will be lost forever.
             </p>
 
             <form action={deleteProductAction} className="w-full">

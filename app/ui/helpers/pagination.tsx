@@ -99,12 +99,17 @@ function PaginationArrow({
   const Icon = direction === 'left' ? ChevronLeftIcon : ChevronRightIcon;
 
   return isDisabled ? (
-    <div className={className}>
-      <Icon className="w-4 h-4" />
+    <div className={className} aria-disabled="true">
+      <Icon className="w-4 h-4" aria-hidden="true" />
     </div>
   ) : (
-    <Link className={className} href={href}>
-      <Icon className="w-4 h-4" />
+    <Link
+      className={className}
+      href={href}
+      aria-label={direction === "left" ? "Previous page" : "Next page"}
+    >
+      <Icon className="w-4 h-4" aria-hidden="true" />
     </Link>
   );
+
 }

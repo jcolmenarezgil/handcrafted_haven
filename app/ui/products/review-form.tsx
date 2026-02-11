@@ -19,19 +19,33 @@ export default function ReviewForm({
 
       <input type="hidden" name="rating" value={rating} />
 
-      <input
-        name="name"
-        placeholder="Your name"
-        className="w-full rounded-md border px-3 py-2 text-sm"
-        required
-      />
+      {/* Name */}
+      <div>
+        <label htmlFor="reviewerName" className="sr-only">
+          Your name
+        </label>
+        <input
+          id="reviewerName"
+          name="name"
+          placeholder="Your name"
+          className="w-full rounded-md border px-3 py-2 text-sm"
+          required
+        />
+      </div>
 
-      <textarea
-        name="comment"
-        placeholder="Write a comment (optional)"
-        className="w-full rounded-md border px-3 py-2 text-sm"
-        rows={3}
-      />
+      {/* Comment */}
+      <div>
+        <label htmlFor="reviewComment" className="sr-only">
+          Comment
+        </label>
+        <textarea
+          id="reviewComment"
+          name="comment"
+          placeholder="Write a comment (optional)"
+          className="w-full rounded-md border px-3 py-2 text-sm"
+          rows={3}
+        />
+      </div>
 
       <button
         type="submit"
