@@ -35,7 +35,7 @@ export default async function Page(props: {
 
 
   const categories = await fetchCategories();
-  const totalPages = await fetchProductsPages(query, category, minPrice.toString(), maxPrice.toString(), itemsPerPage);
+  const totalPages = await fetchProductsPages(query, category, minPrice.toString(), maxPrice.toString(), itemsPerPage, '');
 
   return (
     <main className="w-full">
@@ -61,6 +61,7 @@ export default async function Page(props: {
             maxPrice={maxPrice}
             orderBy={orderBy}
             itemsPerPage={itemsPerPage}
+            sellerId=""
           />
         </Suspense>
       </div>
