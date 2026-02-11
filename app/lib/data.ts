@@ -366,3 +366,4 @@ export async function fetchArtisanProfileById(id: string) {
     throw new Error("Failed to fetch artisan.");
   }
 }
+

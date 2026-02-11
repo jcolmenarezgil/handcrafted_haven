@@ -9,7 +9,7 @@ import { Button } from "./button";
 
 export default function CreateuserForm() {
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/";
+  const callbackUrl = searchParams.get("callbackUrl") || "/login";
   const [userType, setUserType] = useState<"basic" | "seller" | null>(null);
   const [, formAction] = useActionState(createUser, {
     message: null,
