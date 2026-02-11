@@ -29,7 +29,7 @@ export default async function ArtisanPage (props: {
   return (
     <main className="mx-auto max-w-7xl px-4 py-10">
 
-      <div className="grid grid-cols-[1fr_200px] gap-12 items-center max-w-3xl">
+      <div className="grid grid-cols-1 md:grid-cols-[1fr_300px] gap-12 items-center mb-16">
 
         {/* Bussiness Name */}
         <div className="flex flex-col">
@@ -64,13 +64,18 @@ export default async function ArtisanPage (props: {
         </div>
       </div>
 
-      <section className="mt-20 max-w-3xl">
+      <section className="mt-24">
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="text-black text-[15px] font-bold uppercase tracking-[0.3em]">
+            Artworks
+          </h2>
+          <div className="h-px grow mx-8 bg-slate-100 hidden md:block" />
+        </div>
 
-        <h2 className="text-bñack text-[15px] font-bold uppercase tracking-[0.3em] mb-4">Our Products</h2>
-
-        <div className="mx-auto px-4 bg-[#faf7f2] border border-slate-100 shadow-sm rounded-md p-2">
+        {/* Contenedor del Grid con padding generoso y bordes suaves */}
+        <div className="bg-[#faf7f2]/50 border border-slate-100 shadow-sm rounded-3xl p-8">
           <Suspense
-            key="text"
+            key={currentPage}
             fallback={<ProductsGridSkeleton />}
           >
             <ProductsGrid
@@ -86,7 +91,7 @@ export default async function ArtisanPage (props: {
           </Suspense>
         </div>
 
-        <div className="mt-5 flex w-full justify-center">
+        <div className="mt-12 flex w-full justify-center">
           <Pagination totalPages={totalPages} />
         </div>
       </section>
