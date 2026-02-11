@@ -3,7 +3,6 @@ import {z} from 'zod';
 import postgres from 'postgres';
 import {redirect} from 'next/navigation';
 import bcrypt from 'bcryptjs';
-import { format } from 'path';
 const sql = postgres(process.env.DATABASE_URL!);
 
 const FormSchema = z.object({
