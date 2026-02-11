@@ -1,144 +1,97 @@
 import Image from "next/image";
+import Link from "next/link";
 import { notFound } from "next/navigation";
-import { revalidatePath } from "next/cache";
-import ReviewForm from "@/app/ui/products/review-form";
+import { ArrowLeftIcon, StarIcon } from "@heroicons/react/24/solid";
 
-import {
-  fetchProductById,
-  fetchReviewsByProductId,
-  createReview,
-} from "@/app/lib/data";
-import { Metadata } from "next";
+import { fetchArtisanProfileById, fetchProductsPages } from "@/app/lib/data";
+import ProductsGrid from "@/app/ui/products/grid";
+import { ProductsGridSkeleton } from "@/app/ui/skeleton";
+import { Suspense } from "react";
+import Pagination from "@/app/ui/helpers/pagination";
 
-export const metadata: Metadata = {
-  title: "Artisan Profile",
-};
-
-export default async function ProductPage(props: {
-  params: { id: string } | Promise<{ id: string }>;
+export default async function ArtisanPage (props: { 
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ page?: string }>; 
 }) {
-  const params = await props.params;
-  const productId = params.id;
+  const { id: artisanId } = await props.params;
+  const searchParams = await props.searchParams;
 
-  const product = await fetchProductById(productId);
-  if (!product) return notFound();
+  const query = '';
+  const category = '';
+  const minPrice = 0;
+  const maxPrice = 99999;
+  const orderBy =  "name";
+  const currentPage = Number(searchParams?.page) || 1;
+  const itemsPerPage = 3
 
-  const reviews = await fetchReviewsByProductId(productId);
-
-  async function addReview(formData: FormData) {
-    "use server";
-
-    const name = String(formData.get("name") || "").trim();
-    const comment = String(formData.get("comment") || "").trim();
-    const rating = Number(formData.get("rating"));
-
-    if (!name) return;
-    if (!(rating >= 1 && rating <= 5)) return;
-
-    await createReview({ productId, name, rating, comment });
-
-    revalidatePath(`/dashboard/product/${productId}`);
-  }
+  const artisan = await fetchArtisanProfileById(artisanId);
+  const totalPages = await fetchProductsPages(query, category, minPrice.toString(), maxPrice.toString(), itemsPerPage, artisanId);
+  if (!artisan) return notFound();
 
   return (
-    <main className="min-h-screen bg-white text-slate-900">
-      <div className="mx-auto max-w-6xl px-4 py-6 grid gap-6 lg:grid-cols-[1fr_220px]">
-        <section className="space-y-6 grid-cols-[repeat(auto-fit,minmax(200px,1fr))]">
-          <div className="rounded-lg border p-5">
-            <h1 className="text-2xl font-bold text-center">{product.name}</h1>
+    <main className="mx-auto max-w-7xl px-4 py-10">
 
-            <div className="mt-5 rounded-lg border bg-slate-50 p-4">
-              <div className="mb-3 aspect-4/3 w-full rounded-md border bg-white relative overflow-hidden">
-                {product.image_url ? (
-                  <Image
-                    src={product.image_url}
-                    alt={product.name}
-                    fill
-                    className="object-contain"
-                    sizes="(max-width: 1024px) 100vw, 700px"
-                  />
-                ) : (
-                  <div className="flex h-full items-center justify-center bg-slate-200 text-xs text-slate-500">
-                    No Image Available
-                  </div>
-                )}
-              </div>
+      <div className="grid grid-cols-[1fr_200px] gap-12 items-center max-w-3xl">
 
-              <div className="space-y-2 text-sm text-slate-700">
-                <p>
-                  <span className="font-semibold">Price:</span> $
-                  {Number(product.price).toFixed(2)}
-                </p>
-                <p>
-                  <span className="font-semibold">Category:</span>{" "}
-                  {product.category}
-                </p>
-                <p>
-                  <span className="font-semibold">Made by:</span>{" "}
-                  {product.seller}
-                </p>
-                <p className="text-slate-600">
-                  {product.description || "No description yet."}
-                </p>
-              </div>
-            </div>
+        {/* Bussiness Name */}
+        <div className="flex flex-col">
+          <h1 className="font-serif italic text-4xl md:text-5xl text-[#2e2e2e] leading-tight mb-2">
+            {artisan.name}
+          </h1>
+          <h2 className="text-[#c97c5d] text-[10px] font-bold uppercase tracking-[0.3em] mb-2">
+            Owned by {artisan.business_name}
+          </h2>
+        </div>
 
-            <button className="mt-5 w-full rounded-md bg-slate-900 px-4 py-3 text-sm font-semibold text-white hover:bg-slate-800 lg:hidden">
-              Add to Cart
-            </button>
-          </div>
+        {/* User Image */}
+        <div className="relative aspect-square overflow-hidden rounded-3xl bg-[#faf7f2] border border-slate-100 shadow-sm group w-50">
+          {artisan.image_url ? (
+            <Image
+              src={artisan.image_url}
+              alt={artisan.name}
+              fill
+              className="object-cover transition-transform duration-500 group-hover:scale-105"
+              priority
+            />
+          ) : (
+            <div className="flex h-full items-center justify-center text-slate-400">No Image</div>
+          )}
+        </div>
 
-          {/* Reviews */}
-          <div className="rounded-lg border p-5">
-            <h2 className="text-lg font-semibold">Comments / Reviews</h2>
-
-            <div className="mt-4 space-y-3">
-              {reviews.length === 0 ? (
-                <p className="text-sm text-slate-600">No reviews yet.</p>
-              ) : (
-                reviews.map((r: any) => (
-                  <div key={r.id} className="rounded-md border p-3">
-                    <div className="flex items-center justify-between">
-                      <p className="font-semibold">{r.name}</p>
-                      <p className="text-sm text-yellow-600">
-                        {"★".repeat(Number(r.rating))}
-                        <span className="text-slate-300">
-                          {"★".repeat(5 - Number(r.rating))}
-                        </span>
-                      </p>
-                    </div>
-
-                    {r.comment ? (
-                      <p className="mt-2 text-sm text-slate-700">{r.comment}</p>
-                    ) : null}
-
-                    <p className="mt-2 text-[11px] text-slate-400">
-                      {new Date(r.created_at).toLocaleString()}
-                    </p>
-                  </div>
-                ))
-              )}
-            </div>
-
-            <div className="mt-6 rounded-md border bg-slate-50 p-4">
-              <p className="font-semibold">Leave a review</p>
-              <ReviewForm action={addReview} />
-            </div>
-          </div>
-        </section>
-
-        {/* Right column */}
-        <aside className="hidden lg:block">
-          <div className="sticky top-6 rounded-lg border p-4">
-            <p className="text-sm font-semibold text-slate-700 text-center">
-              Add to cart
-            </p>
-            <button className="mt-3 w-full rounded-md bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800">
-              Add to Cart
-            </button>
-          </div>
-        </aside>
+        <div className="col-span-2">
+          <h2 className="text-bñack text-[15px] font-bold uppercase tracking-[0.3em] mb-2">About Us</h2>
+          <p className="text-slate-600 leading-relaxed text-lg mb-8 font-light italic">
+            &quot;{artisan.description || "This artisan has just begun this beautiful journey."}&quot;
+          </p>
+        </div>
       </div>
+
+      <section className="mt-20 max-w-3xl">
+
+        <h2 className="text-bñack text-[15px] font-bold uppercase tracking-[0.3em] mb-4">Our Products</h2>
+
+        <div className="mx-auto px-4 bg-[#faf7f2] border border-slate-100 shadow-sm rounded-md p-2">
+          <Suspense
+            key="text"
+            fallback={<ProductsGridSkeleton />}
+          >
+            <ProductsGrid
+              query={query}
+              currentPage={currentPage}
+              category={category}
+              minPrice={minPrice}
+              maxPrice={maxPrice}
+              orderBy={orderBy}
+              itemsPerPage={itemsPerPage}
+              sellerId={artisanId}
+            />
+          </Suspense>
+        </div>
+
+        <div className="mt-5 flex w-full justify-center">
+          <Pagination totalPages={totalPages} />
+        </div>
+      </section>
     </main>
   );
 }

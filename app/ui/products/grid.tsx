@@ -11,6 +11,7 @@ export default async function ProductsGrid({
   maxPrice,
   orderBy,
   itemsPerPage,
+  sellerId,
 }: {
   query: string;
   currentPage: number;
@@ -19,6 +20,7 @@ export default async function ProductsGrid({
   maxPrice: number;
   orderBy: string;
   itemsPerPage: number;
+  sellerId: string;
 }) {
   const products = await fetchFilteredProducts(
     query,
@@ -28,6 +30,7 @@ export default async function ProductsGrid({
     maxPrice.toString(),
     orderBy,
     itemsPerPage,
+    sellerId
   );
 
   if (!products || products.length === 0) {
