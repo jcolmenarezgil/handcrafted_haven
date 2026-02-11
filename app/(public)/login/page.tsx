@@ -4,9 +4,7 @@ import { Suspense } from 'react';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Login | Handcrafted Haven',
-  description: 'Login to access your Handcrafted Haven account.',
-}; 
+  title: 'Login'};
 
 
 export default function LoginPage() {
