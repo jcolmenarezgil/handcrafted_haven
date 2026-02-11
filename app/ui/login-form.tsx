@@ -1,11 +1,7 @@
 'use client';
  
 
-import {
-  AtSymbolIcon,
-  KeyIcon,
-  
-} from '@heroicons/react/24/outline';
+import { AtSymbolIcon, KeyIcon } from '@heroicons/react/24/outline';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import {loginAction} from "@/app/lib/actions/auth_actions";
 import { useSearchParams } from 'next/navigation';

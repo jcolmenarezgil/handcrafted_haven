@@ -9,10 +9,10 @@ export const metadata: Metadata = {
 };
 
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
-    return (
-        <>
-            <Header />
-            {children}
-        </>
-    );
+  return (
+    <>
+      <Header />
+      {children}
+    </>
+  );
 }
