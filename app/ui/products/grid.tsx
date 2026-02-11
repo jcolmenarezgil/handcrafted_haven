@@ -10,6 +10,8 @@ export default async function ProductsGrid({
   minPrice,
   maxPrice,
   orderBy,
+  itemsPerPage,
+  sellerId,
 }: {
   query: string;
   currentPage: number;
@@ -17,6 +19,8 @@ export default async function ProductsGrid({
   minPrice: number;
   maxPrice: number;
   orderBy: string;
+  itemsPerPage: number;
+  sellerId: string;
 }) {
   const products = await fetchFilteredProducts(
     query,
@@ -24,7 +28,9 @@ export default async function ProductsGrid({
     category,
     minPrice.toString(),
     maxPrice.toString(),
-    orderBy
+    orderBy,
+    itemsPerPage,
+    sellerId
   );
 
   if (!products || products.length === 0) {
@@ -37,17 +43,18 @@ export default async function ProductsGrid({
         <h3 className="text-2xl font-serif italic text-[#2e2e2e]">No treasures found</h3>
 
         <p className="text-slate-500 text-sm mt-3 text-center max-w-sm leading-relaxed">
-          We couldn&apos;t find anything matching <span className="font-bold text-[#6b4f3f]">&quot;{query || 'your filters'}&quot;</span>.
-          The artisan might be crafting it as we speak!
+          We couldn&apos;t find anything matching <span className="font-bold text-[#6b4f3f]">{query ? `"${query}"` : 'these characteristics'}</span>.
+          The artisans might be crafting it as we speak!
         </p>
 
-        <Link
-          href="/products"
-          className="mt-8 flex items-center gap-2 px-6 py-3 bg-[#2e2e2e] text-white rounded-full text-sm font-semibold hover:bg-black transition-all shadow-md hover:shadow-lg active:scale-95"
-        >
-          <ArrowPathIcon className="w-4 h-4" />
-          Clear all filters
-        </Link>
+        {sellerId === "" && (
+          <Link
+            href="/products"
+            className="mt-8 flex items-center gap-2 px-6 py-3 bg-[#2e2e2e] text-white rounded-full text-sm font-semibold hover:bg-black transition-all shadow-md hover:shadow-lg active:scale-95">
+            <ArrowPathIcon className="w-4 h-4" />
+            Clear all filters
+          </Link>
+        )}
       </div>
     );
   }

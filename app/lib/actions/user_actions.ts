@@ -1,8 +1,12 @@
 'use server';
+
+
 import {z} from 'zod';
 import postgres from 'postgres';
 import {redirect} from 'next/navigation';
 import bcrypt from 'bcryptjs';
+import { State } from '../definitions';
+
 const sql = postgres(process.env.DATABASE_URL!);
 
 const FormSchema = z.object({
@@ -30,30 +34,20 @@ seller_description: z.string().optional(),
 
 const CreateUser = FormSchema.omit({id: true});
 
-export type State ={
-    errors?: {
-        name?: string[];
-        email?: string[];
-        password?: string[];
-        usertype?: string[];
-        seller_username?: string[];
-        seller_description?: string[];
-    };
-    message?: string | null;
-};
-
 export async function createUser(
-  prevState: State,
+  _prevState: State,
   formData: FormData
 ): Promise<State> {
+  const sellerUsernameEntry = formData.get('seller_username');
+  const sellerDescriptionEntry = formData.get('seller_description');
 
   const validateField = CreateUser.safeParse({
     name: formData.get('name') as string,
     email: formData.get('email') as string,
     password: formData.get('password') as string,
     usertype: formData.get('usertype') as 'basic' | 'admin' | 'seller',
-    seller_username: formData.get('seller_username') as string | undefined,
-    seller_description: formData.get('seller_description') as string | undefined,
+    seller_username: sellerUsernameEntry ? String(sellerUsernameEntry) : undefined,
+    seller_description: sellerDescriptionEntry ? String(sellerDescriptionEntry) : undefined,
   });
 
   if (!validateField.success) {
@@ -62,30 +56,58 @@ export async function createUser(
   }
 
   const userData = validateField.data;
+  const lower = userData.name.toLowerCase();
+  const formattedName = lower.charAt(0).toUpperCase() + lower.slice(1);
   const hashedPassword = await bcrypt.hash(userData.password, 10);
 
+  const sellerUsernameRaw =
+    userData.usertype === 'seller' ? userData.seller_username : undefined;
+  const sellerDescriptionRaw =
+    userData.usertype === 'seller' ? userData.seller_description : undefined;
+
+  // Convert "basic" empty strings to null so we don't store "" in DB
+  const sellerUsername =
+    sellerUsernameRaw && sellerUsernameRaw.trim() !== '' ? sellerUsernameRaw.trim() : null;
+
+  const sellerDescription =
+    sellerDescriptionRaw && sellerDescriptionRaw.trim() !== '' ? sellerDescriptionRaw.trim() : null;
+
   try {
-          await sql`
+    await sql`
       INSERT INTO users (
         user_name,
         user_email,
         user_password,
-        user_type
+        user_type,
+        seller_username,
+        seller_description
       )
       VALUES (
-        ${userData.name},
+        ${formattedName},
         ${userData.email},
         ${hashedPassword},
-        ${userData.usertype}
+        ${userData.usertype},
+        ${sellerUsername},
+        ${sellerDescription}
       )
-      `;
+    `;
+  } catch (error: unknown) {
+    const code =
+      typeof error === 'object' && error !== null && 'code' in error
+        ? (error as { code?: string }).code
+        : undefined;
 
-      
-    } catch (error) {
+    if (code === '23505') {
       return {
-        message: 'An error occurred while creating the user.',
+        errors: { email: ['Email already exists'] },
+        message: null,
       };
+    }
+
+    return { message: 'An error occurred while creating the user.' };
   }
-  // If the try it's working the redirect too.
-    redirect('/users');
+
+  const redirectTo = (formData.get('redirectTo') as string) || '/login';
+  redirect(redirectTo);
+
 }

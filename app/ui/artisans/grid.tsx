@@ -6,11 +6,17 @@ import { StarIcon, UserIcon, CheckBadgeIcon } from '@heroicons/react/24/solid';
 export default async function ArtisansGrid({
   query,
   currentPage,
+  itemsPerPage,
 }: {
   query: string;
   currentPage: number;
+  itemsPerPage: number;
 }) {
-  const artisans = await fetchFilteredArtisans(query, currentPage);
+  const artisans = await fetchFilteredArtisans(
+    query, 
+    currentPage, 
+    itemsPerPage,
+  );
 
   if (!artisans || artisans.length === 0) {
     return (

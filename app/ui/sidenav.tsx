@@ -1,7 +1,5 @@
-import Link from "next/link";
 import NavLinks from "@/app/ui/helpers/nav-links";
 import { getCurrentUser } from "@/app/lib/auth";
-import { ChevronRightIcon } from "@heroicons/react/24/outline";
 
 export default async function SideNav() {
   const user = await getCurrentUser();

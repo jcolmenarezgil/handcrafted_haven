@@ -2,6 +2,7 @@ import { sql } from "@vercel/postgres";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import crypto from "crypto";
+import { CurrentUser } from "./definitions";
 
 const SESSION_COOKIE = "this_session";
 const SESSION_DAYS = 14;
@@ -25,15 +26,6 @@ function expiresAtDate(days = SESSION_DAYS) {
   d.setDate(d.getDate() + days);
   return d;
 }
-
-export type UserRole = "buyer" | "seller" | "admin";
-
-export type CurrentUser = {
-  id: string;
-  name: string;
-  type: UserRole;
-  email: string;
-};
 
 export async function createSession(userId: string) {
   const token = newToken();

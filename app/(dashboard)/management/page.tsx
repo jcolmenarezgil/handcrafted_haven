@@ -1,10 +1,11 @@
 import Link from "next/link";
 import Image from "next/image";
 import { requireManager } from "@/app/lib/auth";
-import { fetchProductsBySeller, SellerProduct } from "@/app/lib/data";
+import { fetchProductsBySeller } from "@/app/lib/data";
 import ConfirmDeleteButton from "@/app/ui/management/confirm-delete-button";
 import { deleteProductAction } from "@/app/lib/actions/management_actions";
 import { PlusIcon, PencilSquareIcon, StarIcon, ArchiveBoxIcon } from "@heroicons/react/24/outline";
+import { SellerProduct } from "@/app/lib/definitions";
 
 export default async function ManagementPage() {
   const { userId } = await requireManager();

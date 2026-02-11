@@ -3,9 +3,9 @@ import { fetchCategories, fetchProductsPages } from "@/app/lib/data";
 import { Suspense } from "react";
 import ProductsGrid from "@/app/ui/products/grid";
 import Pagination from "@/app/ui/helpers/pagination";
-
 import { Metadata } from 'next';
 import ProductFilterBar from "@/app/ui/products/filter-bar";
+import ItemsPerPage from "@/app/ui/helpers/itemsPerPage";
 
 export const metadata: Metadata = {
   title: 'Products',
@@ -19,8 +19,10 @@ export default async function Page(props: {
     minPrice?: string;
     maxPrice?: string;
     orderBy?: string;
+    itemsPerPage?: string;
   }>;
 }) {
+  const minCardShow = 5;
   const searchParams = await props.searchParams;
   const query = searchParams?.query || '';
   const category = searchParams?.category || '';
@@ -28,9 +30,11 @@ export default async function Page(props: {
   const minPrice = Number(searchParams?.minPrice) || 0;
   const maxPrice = Number(searchParams?.maxPrice) || 99999;
   const orderBy =  searchParams?.orderBy || "name";
+  const itemsPerPage = Number(searchParams?.itemsPerPage) || minCardShow;
+
 
   const categories = await fetchCategories();
-  const totalPages = await fetchProductsPages(query, category, minPrice.toString(), maxPrice.toString());
+  const totalPages = await fetchProductsPages(query, category, minPrice.toString(), maxPrice.toString(), itemsPerPage, '');
 
   return (
     <main className="w-full">
@@ -55,12 +59,17 @@ export default async function Page(props: {
             minPrice={minPrice}
             maxPrice={maxPrice}
             orderBy={orderBy}
+            itemsPerPage={itemsPerPage}
+            sellerId=""
           />
         </Suspense>
       </div>
       
       <div className="mt-5 flex w-full justify-center">
         <Pagination totalPages={totalPages} />
+      </div>
+      <div className="w-full text-center">
+        <ItemsPerPage minCardShow={minCardShow} />
       </div>
     </main>
   );
