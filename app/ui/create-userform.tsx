@@ -1,7 +1,7 @@
 "use client";
 import { createUser } from "@/app/lib/actions/user_actions";
 import { useActionState, useState } from "react";
-
+import { UserIcon } from "@heroicons/react/24/outline";
 import { AtSymbolIcon, KeyIcon } from "@heroicons/react/24/outline";
 import { ArrowRightIcon } from "@heroicons/react/20/solid";
 import { useSearchParams } from "next/navigation";
@@ -11,7 +11,7 @@ export default function CreateuserForm() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/";
   const [userType, setUserType] = useState<"basic" | "seller" | null>(null);
-  const [state, formAction] = useActionState(createUser, {
+  const [, formAction] = useActionState(createUser, {
     message: null,
     errors: {},
   });
@@ -38,7 +38,7 @@ export default function CreateuserForm() {
               placeholder="Enter your name"
               required
             />
-            <AtSymbolIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+            <UserIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
           </div>
         </div>
 
@@ -60,7 +60,7 @@ export default function CreateuserForm() {
               required
               minLength={6}
             />
-            <KeyIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+            <AtSymbolIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
           </div>
         </div>
 
@@ -110,7 +110,7 @@ export default function CreateuserForm() {
                 type="radio"
                 name="usertype"
                 value="seller"
-                onChange={() => setUserType('seller')}
+                onChange={() => setUserType("seller")}
               />
               <span>Seller</span>
             </label>
