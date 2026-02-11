@@ -3,6 +3,7 @@ import {z} from 'zod';
 import postgres from 'postgres';
 import {redirect} from 'next/navigation';
 import bcrypt from 'bcryptjs';
+import { format } from 'path';
 const sql = postgres(process.env.DATABASE_URL!);
 
 const FormSchema = z.object({
@@ -64,6 +65,8 @@ export async function createUser(
   }
 
   const userData = validateField.data;
+  const lower = userData.name.toLowerCase();
+  const formattedName = lower.charAt(0).toUpperCase() + lower.slice(1);
   const hashedPassword = await bcrypt.hash(userData.password, 10);
 
   const sellerUsernameRaw =
@@ -89,7 +92,7 @@ export async function createUser(
         seller_description
       )
       VALUES (
-        ${userData.name},
+        ${formattedName},
         ${userData.email},
         ${hashedPassword},
         ${userData.usertype},
