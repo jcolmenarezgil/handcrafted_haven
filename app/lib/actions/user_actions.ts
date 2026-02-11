@@ -5,6 +5,7 @@ import {z} from 'zod';
 import postgres from 'postgres';
 import {redirect} from 'next/navigation';
 import bcrypt from 'bcryptjs';
+import { State } from '../definitions';
 
 const sql = postgres(process.env.DATABASE_URL!);
 
@@ -32,18 +33,6 @@ seller_description: z.string().optional(),
 });
 
 const CreateUser = FormSchema.omit({id: true});
-
-export type State ={
-    errors?: {
-        name?: string[];
-        email?: string[];
-        password?: string[];
-        usertype?: string[];
-        seller_username?: string[];
-        seller_description?: string[];
-    };
-    message?: string | null;
-};
 
 export async function createUser(
   _prevState: State,
