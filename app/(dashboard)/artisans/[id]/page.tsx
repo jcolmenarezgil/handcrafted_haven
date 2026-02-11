@@ -59,7 +59,7 @@ export default async function ArtisanPage (props: {
         </div>
 
         <div className="col-span-2">
-          <h2 className="text-bñack text-[15px] font-bold uppercase tracking-[0.3em] mb-2">
+          <h2 className="text-black text-[15px] font-bold uppercase tracking-[0.3em] mb-2">
             About Us
           </h2>
           <p className="text-slate-600 leading-relaxed text-lg mb-8 font-light italic">
