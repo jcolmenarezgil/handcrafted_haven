@@ -136,11 +136,6 @@ export default async function EditProductPage(props: {
               >
                 Category
               </label>
-
-              {/* NOTE:
-                 Update CategorySelect to accept an `id` prop and pass it to the real <select>.
-                 If you can’t change CategorySelect right now, keep your aria-label there as a fallback.
-              */}
               <CategorySelect
                 id="editProductCategory"
                 categories={categories}
