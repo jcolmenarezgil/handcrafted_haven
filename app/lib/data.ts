@@ -185,6 +185,7 @@ export async function fetchFilteredProducts(
   maxPrice: string,
   orderBy: string,
   itemsPerPage: number,
+  sellerId: string,
 ) {
   const offset = (currentPage - 1) * itemsPerPage;
 
@@ -198,6 +199,7 @@ export async function fetchFilteredProducts(
         p.product_image_url AS image_url,
         c.category_name AS category,
         u.user_name AS seller,
+        u.user_id AS user_id,
         COALESCE(AVG(r.rating), 0) AS rating
         FROM products p
         JOIN categories c ON p.category_id = c.category_id
@@ -213,8 +215,10 @@ export async function fetchFilteredProducts(
         (${minPrice} = 0 OR p.product_price >= ${minPrice})
       AND
         (${maxPrice} = 99999 OR p.product_price <= ${maxPrice})
+      AND
+        (${sellerId} = '' OR u.user_id::text = ${sellerId})
       GROUP BY
-        p.product_id, p.product_name, c.category_name, u.user_name, p.product_price, p.product_image_url, p.product_description
+        p.product_id, p.product_name, c.category_name, u.user_name, u.user_id, p.product_price, p.product_image_url, p.product_description
       ORDER BY 
         CASE WHEN ${orderBy} = 'price_asc' THEN p.product_price END ASC,
         CASE WHEN ${orderBy} = 'price_desc' THEN p.product_price END DESC,
@@ -235,6 +239,7 @@ export async function fetchProductsPages(
   minPrice: string,
   maxPrice: string,
   itemsPerPage: number,
+  sellerId: string,
 ) {
   try {
     const data = await sql`SELECT COUNT(*)
@@ -251,6 +256,8 @@ export async function fetchProductsPages(
       (${minPrice} = 0 OR p.product_price >= ${minPrice})
       AND
       (${maxPrice} = 99999 OR p.product_price <= ${maxPrice})
+      AND
+      (${sellerId} = '' OR u.user_id::text = ${sellerId})
   `;
 
     const totalPages = Math.ceil(Number(data.rows[0].count) / itemsPerPage);
@@ -276,13 +283,15 @@ export async function fetchFilteredArtisans(
         u.user_profile_image_url AS profile_image,
         u.seller_username AS business_name,
         u.seller_description AS description,
+        u.user_type AS type,
         COALESCE(AVG(r.rating), 0) AS rating
       FROM users u
       LEFT JOIN products p ON p.user_id = u.user_id
       LEFT JOIN reviews r ON r.product_id = p.product_id
       WHERE
-        u.user_name ILIKE ${`%${query}%`} OR
-        u.seller_username ILIKE ${`%${query}%`}
+        u.user_type = 'seller' AND
+        (u.user_name ILIKE ${`%${query}%`} OR
+        u.seller_username ILIKE ${`%${query}%`})
       GROUP BY
         u.user_id
       ORDER BY name ASC
@@ -304,8 +313,9 @@ export async function fetchArtisansPages(
     const data = await sql`SELECT COUNT(*)
     FROM users
     WHERE
-      user_name ILIKE ${`%${query}%`} OR
-      seller_username ILIKE ${`%${query}%`}
+      user_type = 'seller' AND
+      (user_name ILIKE ${`%${query}%`} OR
+      seller_username ILIKE ${`%${query}%`})
   `;
 
     const totalPages = Math.ceil(Number(data.rows[0].count) / itemsPerPage);
@@ -355,4 +365,31 @@ export async function fetchProductByIdForSeller(userId: string, productId: strin
     LIMIT 1
   `;
   return data.rows[0] ?? null;
+}
+
+export async function fetchArtisanProfileById(id: string) {
+  try {
+    const data = await sql`
+    SELECT
+    u.user_id AS id,
+    u.user_name AS name,
+    u.user_profile_image_url AS profile_image,
+    u.seller_username AS business_name,
+    u.seller_description AS description,
+    COALESCE(AVG(r.rating), 0) AS rating
+    FROM users u
+    LEFT JOIN products p ON p.user_id = u.user_id
+    LEFT JOIN reviews r ON r.product_id = p.product_id
+    WHERE
+      u.user_id = ${id}
+    GROUP BY
+      u.user_id
+        LIMIT 1
+    `;
+
+    return data.rows[0] ?? null;
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch artisan.");
+  }
 }
