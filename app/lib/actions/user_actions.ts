@@ -46,13 +46,16 @@ export async function createUser(
   _prevState: State,
   formData: FormData
 ): Promise<State> {
+  const sellerUsernameEntry = formData.get('seller_username');
+  const sellerDescriptionEntry = formData.get('seller_description');
+
   const validateField = CreateUser.safeParse({
     name: formData.get('name') as string,
     email: formData.get('email') as string,
     password: formData.get('password') as string,
     usertype: formData.get('usertype') as 'basic' | 'admin' | 'seller',
-    seller_username: formData.get('seller_username') as string | undefined,
-    seller_description: formData.get('seller_description') as string | undefined,
+    seller_username: sellerUsernameEntry ? String(sellerUsernameEntry) : undefined,
+    seller_description: sellerDescriptionEntry ? String(sellerDescriptionEntry) : undefined,
   });
 
   if (!validateField.success) {
@@ -68,7 +71,7 @@ export async function createUser(
   const sellerDescriptionRaw =
     userData.usertype === 'seller' ? userData.seller_description : undefined;
 
-  // Convert basic empty strings to null so we don't store "" in DB
+  // Convert "basic" empty strings to null so we don't store "" in DB
   const sellerUsername =
     sellerUsernameRaw && sellerUsernameRaw.trim() !== '' ? sellerUsernameRaw.trim() : null;
 
