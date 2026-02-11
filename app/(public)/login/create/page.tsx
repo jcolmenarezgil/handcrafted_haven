@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function CreateUserPage() {
   return (
-    <main className="flex items-center justify-center min-h-screen bg-[#faf7f2] py-12">
+    <main className="flex items-center justify-center min-h-screen bg-[#faf7f2] pb-12">
       <div className="relative mx-auto flex w-full max-w-125 flex-col space-y-6 p-6">
         <div className="flex flex-col items-center space-y-2 text-center">
           <h2 className="text-sm font-bold uppercase tracking-[0.3em] text-[#7a391c]">

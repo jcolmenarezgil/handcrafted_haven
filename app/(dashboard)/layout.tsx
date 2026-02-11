@@ -20,7 +20,7 @@ export default function RootLayout({
     <>
       <div className="min-h-screen">
         <Header />
-        <div className="flex flex-col md:flex-row md:overflow-hidden">
+        <div className="mx-auto max-w-7xl flex flex-col md:flex-row md:overflow-hidden">
           <div className="w-full flex-none md:w-64">
             <SideNav />
           </div>
