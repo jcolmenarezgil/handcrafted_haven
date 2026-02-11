@@ -10,6 +10,7 @@ import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import {loginAction} from "@/app/lib/actions/auth_actions";
 import { useSearchParams } from 'next/navigation';
 import { Button } from './button';
+import Link from 'next/link';
  
 export default function LoginForm() {
   const searchParams = useSearchParams();
@@ -22,7 +23,7 @@ export default function LoginForm() {
         <div className="w-full">
           <div>
             <label
-              className="mb-3 mt-5 block text-xs font-medium text-gray-900"
+              className="mb-2 mt-5 block text-xs font-medium text-gray-900"
               htmlFor="email"
             >
               Email
@@ -41,7 +42,7 @@ export default function LoginForm() {
           </div>
           <div className="mt-4">
             <label
-              className="mb-3 mt-5 block text-xs font-medium text-gray-900"
+              className="mb-2 mt-5 block text-xs font-medium text-gray-900"
               htmlFor="password"
             >
               Password
@@ -61,9 +62,23 @@ export default function LoginForm() {
           </div>
         </div>
         <input type="hidden" name="redirectTo" value={callbackUrl} />
-        <Button className="mb-3 mt-8 w-full bg-green-800 text-white hover:bg-green-900 " type="submit">
+        <Button
+          className="mb-3 mt-8 w-full bg-green-800 text-white hover:bg-green-900"
+          type="submit"
+        >
           Log in <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
         </Button>
+
+        <p className="mt-3 text-center text-sm text-gray-600">
+          Don’t have an account?{" "}
+          <Link
+            href="/login/create"
+            className="font-medium text-green-800 hover:underline"
+          >
+            Create new account
+          </Link>
+        </p>
+
         <div
           className="flex h-8 items-end space-x-1"
           aria-live="polite"

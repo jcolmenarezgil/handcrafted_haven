@@ -1,6 +1,6 @@
 import CreateuserForm from '@/app/ui/create-userform';
 import { Suspense } from 'react';
- 
+
 export default function CreateUsePage() {
   return (
     <main className="flex items-center justify-center md:h-screen">
