@@ -3,7 +3,6 @@ import { fetchCategories, fetchProductsPages } from "@/app/lib/data";
 import { Suspense } from "react";
 import ProductsGrid from "@/app/ui/products/grid";
 import Pagination from "@/app/ui/helpers/pagination";
-
 import { Metadata } from 'next';
 import ProductFilterBar from "@/app/ui/products/filter-bar";
 import ItemsPerPage from "@/app/ui/helpers/itemsPerPage";

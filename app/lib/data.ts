@@ -1,5 +1,5 @@
 import { sql } from '@vercel/postgres';
-import { ArtisanCardInfo, ProductInfo } from './definitions';
+import { ArtisanCardInfo, Category, ProductInfo, ProductInput, SellerProduct } from './definitions';
 
 export async function fetchProducts() {
   try {
@@ -51,14 +51,6 @@ export async function fetchProductById(id: string) {
   }
 }
 
-export type Review = {
-  id: string;
-  name: string;
-  rating: number;
-  comment: string | null;
-  created_at: string;
-};
-
 export async function fetchReviewsByProductId(productId: string) {
   try {
     const data = await sql`
@@ -97,24 +89,6 @@ export async function createReview(input: {
     throw new Error("Failed to create review.");
   }
 }
-
-export type ProductInput = {
-  name: string;
-  price: number;
-  description: string;
-  image_url: string | null;
-  category_id: string; 
-};
-
-export type SellerProduct = {
-  id: string;
-  name: string;
-  price: string; 
-  description: string | null;
-  image_url: string | null;
-  category: string;
-  rating?: number;
-};
 
 export async function fetchProductsBySeller(userId: string): Promise<SellerProduct[]> {
   const data = await sql`
@@ -326,7 +300,6 @@ export async function fetchArtisansPages(
   }
 }
 
-export type Category = { id: string; name: string };
 
 export async function fetchCategories(): Promise<Category[]> {
   const data = await sql`

@@ -27,3 +27,34 @@ export type ArtisanCardInfo = {
     description: string;
     rating: number;
 }
+
+export type Review = {
+    id: string;
+    name: string;
+    rating: number;
+    comment: string | null;
+    created_at: string;
+};
+
+export type ProductInput = {
+    name: string;
+    price: number;
+    description: string;
+    image_url: string | null;
+    category_id: string; 
+};
+
+export type SellerProduct = {
+    id: string;
+    name: string;
+    price: string; 
+    description: string | null;
+    image_url: string | null;
+    category: string;
+    rating?: number;
+};
+
+export type Category = { 
+    id: string; 
+    name: string 
+};

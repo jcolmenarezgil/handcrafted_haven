@@ -1,7 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeftIcon, StarIcon } from "@heroicons/react/24/solid";
 
 import { fetchArtisanProfileById, fetchProductsPages } from "@/app/lib/data";
 import ProductsGrid from "@/app/ui/products/grid";
