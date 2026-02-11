@@ -58,3 +58,25 @@ export type Category = {
     id: string; 
     name: string 
 };
+
+export type State ={
+    errors?: {
+        name?: string[];
+        email?: string[];
+        password?: string[];
+        usertype?: string[];
+        seller_username?: string[];
+        seller_description?: string[];
+    };
+    message?: string | null;
+};
+
+
+export type UserRole = "basic" | "seller" | "admin";
+
+export type CurrentUser = {
+  id: string;
+  name: string;
+  type: UserRole;
+  email: string;
+};

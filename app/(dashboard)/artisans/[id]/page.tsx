@@ -89,7 +89,7 @@ export default async function ArtisanPage (props: {
           </Suspense>
         </div>
 
-        <div className="mt-5 flex w-full justify-center">
+        <div className="mt-12 flex w-full justify-center">
           <Pagination totalPages={totalPages} />
         </div>
       </section>
