@@ -71,7 +71,19 @@ for (const prod of products) {
         VALUES (${prod.name}, ${prod.price}, ${prod.description}, ${prod.image}, ${categoryId}, ${userId})
         ON CONFLICT DO NOTHING;
       `;
-    }
+}
+    
+      // 5. Create Reviews
+  await client.sql`
+    CREATE TABLE IF NOT EXISTS reviews (
+      review_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+      product_id UUID NOT NULL REFERENCES products(product_id) ON DELETE CASCADE,
+      reviewer_name TEXT NOT NULL,
+      rating INT NOT NULL CHECK (rating >= 1 AND rating <= 5),
+      comment TEXT,
+      created_at TIMESTAMPTZ DEFAULT NOW()
+    );
+  `;
 
     await client.sql`COMMIT`;
     return NextResponse.json({ message: "Handcrafted Haven: Base de datos poblada con éxito" });
