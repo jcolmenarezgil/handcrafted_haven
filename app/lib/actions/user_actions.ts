@@ -43,10 +43,9 @@ export type State ={
 };
 
 export async function createUser(
-  prevState: State,
+  _prevState: State,
   formData: FormData
 ): Promise<State> {
-
   const validateField = CreateUser.safeParse({
     name: formData.get('name') as string,
     email: formData.get('email') as string,
@@ -64,28 +63,54 @@ export async function createUser(
   const userData = validateField.data;
   const hashedPassword = await bcrypt.hash(userData.password, 10);
 
+  const sellerUsernameRaw =
+    userData.usertype === 'seller' ? userData.seller_username : undefined;
+  const sellerDescriptionRaw =
+    userData.usertype === 'seller' ? userData.seller_description : undefined;
+
+  // Convert basic empty strings to null so we don't store "" in DB
+  const sellerUsername =
+    sellerUsernameRaw && sellerUsernameRaw.trim() !== '' ? sellerUsernameRaw.trim() : null;
+
+  const sellerDescription =
+    sellerDescriptionRaw && sellerDescriptionRaw.trim() !== '' ? sellerDescriptionRaw.trim() : null;
+
   try {
-          await sql`
+    await sql`
       INSERT INTO users (
         user_name,
         user_email,
         user_password,
-        user_type
+        user_type,
+        seller_username,
+        seller_description
       )
       VALUES (
         ${userData.name},
         ${userData.email},
         ${hashedPassword},
-        ${userData.usertype}
+        ${userData.usertype},
+        ${sellerUsername},
+        ${sellerDescription}
       )
-      `;
+    `;
+  } catch (error: unknown) {
+    const code =
+      typeof error === 'object' && error !== null && 'code' in error
+        ? (error as { code?: string }).code
+        : undefined;
 
-      
-    } catch (error) {
+    if (code === '23505') {
       return {
-        message: 'An error occurred while creating the user.',
+        errors: { email: ['Email already exists'] },
+        message: null,
       };
+    }
+
+    return { message: 'An error occurred while creating the user.' };
   }
-  // If the try it's working the redirect too.
-    redirect('/users');
+
+  const redirectTo = (formData.get('redirectTo') as string) || '/login';
+  redirect(redirectTo);
+
 }
