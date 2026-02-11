@@ -50,3 +50,14 @@ export function LogoutButton() {
         </form>
     );
 }
+
+export function SignUpButton() {
+    return (
+        <Link
+            href="/login/create"
+            className="flex h-10 items-center rounded-lg bg-white px-4 text-sm font-medium text-black transition-colors hover:bg-slate-100 gap-2 border"
+        >
+            <span className="block">Register</span>
+        </Link>
+    );
+}

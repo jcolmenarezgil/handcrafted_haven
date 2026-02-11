@@ -22,7 +22,7 @@ export default async function Page(props: {
     itemsPerPage?: string;
   }>;
 }) {
-  const minCardShow = 5;
+  const minCardShow = 4;
   const searchParams = await props.searchParams;
   const query = searchParams?.query || '';
   const category = searchParams?.category || '';

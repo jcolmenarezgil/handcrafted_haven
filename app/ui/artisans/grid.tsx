@@ -69,7 +69,7 @@ export default async function ArtisansGrid({
           </div>
 
           <div className="text-center">
-            <h3 className="font-serif text-lg text-[#2e2e2e] group-hover:text-[#c97c5d] transition-colors leading-tight">
+            <h3 className="font-serif text-lg text-[#2e2e2e] group-hover:text-[#c97c5d] transition-colors leading-tight line-clamp-2">
               {a.name}
             </h3>
 

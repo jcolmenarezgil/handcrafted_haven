@@ -12,7 +12,7 @@ export default async function ManagementPage() {
   const products = await fetchProductsBySeller(userId);
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-10">
+    <main className="mx-auto max-w-7xl px-4 py-10">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10 border-b border-slate-100 pb-8">
         <div>
           <h2 className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#6b4f3f] mb-1">

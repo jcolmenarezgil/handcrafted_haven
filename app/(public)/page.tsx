@@ -4,7 +4,7 @@ import Image from "next/image";
 export default async function HomePage() {
   return (
     <main className="bg-white text-slate-900">
-      <div className="mx-auto max-w-6xl p-4">
+      <div className="mx-auto max-w-7xl p-4">
         <div className="relative w-full h-75 md:h-125 flex items-center justify-center overflow-hidden rounded-xl shadow-lg">
           <Image
             src="/handcrafted_haven_home.webp"

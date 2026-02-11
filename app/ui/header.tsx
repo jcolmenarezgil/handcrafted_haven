@@ -1,14 +1,14 @@
 import Link from "next/link";
 import Image from "next/image";
 import { getCurrentUser } from "@/app/lib/auth";
-import { LoginButton, LogoutButton, UserAvatar } from "@/app/ui/login-button";
+import { LoginButton, LogoutButton, SignUpButton, UserAvatar } from "@/app/ui/login-button";
 
 export default async function Header() {
   const user = await getCurrentUser();
 
   return (
     <header className="border-b">
-      <div className="mx-auto max-w-6xl flex items-center justify-between px-4 py-3">
+      <div className="mx-auto max-w-7xl flex items-center justify-between px-4 py-3">
         <Link href="/" className="flex items-center gap-3 group">
           <div className="relative h-9 w-9 overflow-hidden rounded-full border border-slate-200 bg-white flex items-center justify-center">
             <Image
@@ -26,7 +26,10 @@ export default async function Header() {
 
         <nav className="flex items-center gap-2 sm:gap-4">
           {!user ? (
-            <LoginButton />
+            <div className="flex gap-1">
+              <SignUpButton />
+              <LoginButton />
+            </div>
           ) : (
             <div className="flex items-center gap-2 sm:gap-3">
               <div className="flex items-center gap-2">

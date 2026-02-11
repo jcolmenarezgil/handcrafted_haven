@@ -18,7 +18,7 @@ export default async function Page(props: {
     itemsPerPage?: string;
   }>;
 }) {
-  const minCardShow = 5;
+  const minCardShow = 4;
   const searchParams = await props.searchParams;
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;
