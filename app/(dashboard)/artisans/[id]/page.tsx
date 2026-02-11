@@ -28,15 +28,13 @@ export default async function ArtisanPage (props: {
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-10">
-
       <div className="grid grid-cols-[1fr_200px] gap-12 items-center max-w-3xl">
-
-        {/* Bussiness Name */}
+        {/* Business Name */}
         <div className="flex flex-col">
           <h1 className="font-serif italic text-4xl md:text-5xl text-[#2e2e2e] leading-tight mb-2">
             {artisan.name}
           </h1>
-          <h2 className="text-[#c97c5d] text-[10px] font-bold uppercase tracking-[0.3em] mb-2">
+          <h2 className="text-[#9b4d33] text-[10px] font-bold uppercase tracking-[0.3em] mb-2">
             Owned by {artisan.business_name}
           </h2>
         </div>
@@ -52,27 +50,32 @@ export default async function ArtisanPage (props: {
               priority
             />
           ) : (
-            <div className="flex h-full items-center justify-center text-slate-400">No Image</div>
+            <div className="flex h-full items-center justify-center text-slate-400">
+              No Image
+            </div>
           )}
         </div>
 
         <div className="col-span-2">
-          <h2 className="text-bñack text-[15px] font-bold uppercase tracking-[0.3em] mb-2">About Us</h2>
+          <h2 className="text-bñack text-[15px] font-bold uppercase tracking-[0.3em] mb-2">
+            About Us
+          </h2>
           <p className="text-slate-600 leading-relaxed text-lg mb-8 font-light italic">
-            &quot;{artisan.description || "This artisan has just begun this beautiful journey."}&quot;
+            &quot;
+            {artisan.description ||
+              "This artisan has just begun this beautiful journey."}
+            &quot;
           </p>
         </div>
       </div>
 
       <section className="mt-20 max-w-3xl">
-
-        <h2 className="text-bñack text-[15px] font-bold uppercase tracking-[0.3em] mb-4">Our Products</h2>
+        <h2 className="text-bñack text-[15px] font-bold uppercase tracking-[0.3em] mb-4">
+          Our Products
+        </h2>
 
         <div className="mx-auto px-4 bg-[#faf7f2] border border-slate-100 shadow-sm rounded-md p-2">
-          <Suspense
-            key="text"
-            fallback={<ProductsGridSkeleton />}
-          >
+          <Suspense key="text" fallback={<ProductsGridSkeleton />}>
             <ProductsGrid
               query={query}
               currentPage={currentPage}

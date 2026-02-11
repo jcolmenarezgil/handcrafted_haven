@@ -63,7 +63,7 @@ export default async function ArtisansGrid({
 
             {a.description && (
               <div className="absolute -bottom-1 -right-1 bg-white rounded-full p-1 shadow-sm">
-                <CheckBadgeIcon className="h-5 w-5 text-[#8fae9e]" />
+                <CheckBadgeIcon className="h-5 w-5 text-[#2f5e4d]" />
               </div>
             )}
           </div>
@@ -75,7 +75,7 @@ export default async function ArtisansGrid({
 
             <div className="mt-2 inline-block">
               {a.description ? (
-                <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#8fae9e]">
+                <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#2f5e4d]">
                   Master Artisan
                 </span>
               ) : (
